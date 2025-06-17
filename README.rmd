@@ -13,6 +13,7 @@ rm(list = ls()) # Clean your environment:
 gc() # garbage collection - It can be useful to call gc after a large object has been removed, as this may prompt R to return memory to the operating system.
 library(tidyverse)
 list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+list.files('/Question1/code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
 
 # Creation of question folders
 library(Texevier)
@@ -29,9 +30,236 @@ Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template
 Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question5")
 
 # I added the data to the respective question data folders
+# I also added the instruction PDF to the settings folder of the root. 
+
+library(readr)
+Baby_Names <- read_rds("./data/PracData25/US_Baby_names/Baby_Names_By_US_State.rds")
+Top_100_Billboard <- read_rds("./data/PracData25/US_Baby_names/charts.rds")
+HBO_titles <- read_rds("./data/PracData25/US_Baby_names/HBO_titles.rds")
+HBO_credits <- read_rds("./data/PracData25/US_Baby_names/HBO_credits.rds")
+
+#Join the HBO titles and credits
+HBO_joined <- HBO_credits %>%
+  left_join(HBO_titles, by = "id")
+```
+
+# Question 1: Baby names
+Step 1: uploading the data, view the format with view(Baby_/Names)
+
+
+Planning: I will work at a national level. I want to have a summary table (bubble plot) at the end with the 5 most popular names for each decade for boys and girls. 
+Interesting: Comparing persistence between TV characters and actors/ music songs or artists
+
+1. factors influencing naming
+2. persistence of the trends
+
+Putting this on a plot e.g. with Years or Decades on the Y-axis and most popular Names on the
+X (N being the size of the name bubble), popular character names in adult
+or children series. . . ’ ’
+
+First I need to find the most popular baby names in each year
+and the most popular TV celebrities in each year
+and the most popular songs / artists in each year
+
+## Baby Names
+Since I want to work with decades: I need to create some functions that will sort the names in the top 25 order for each decade.
+```{r}
+library(tidyverse)
+library(lubridate)
+#check if year is numeric
+str(Baby_Names$Year)
+
+#create function to add decade column: decade_creator
+#create function to create top25 names with a gender filter: Top25_Names_decade
+
+# create top25 lists with the decade_Creator function and arrange by popularity
+# just checking that it works: 
+
+Top25_boynames_decade <- Top25_Names_by_Decade(Baby_Names, gender_filter = "M")
+```
+I first created a function only for one of the genders and then amended it to be more genericso that we can use it throughout. 
+
+```{r}
+Top25_girlnames_decade <- Top25_Names_by_Decade(Baby_Names, gender_filter = "F")
+
+# I loaded my plot_orderset function
+top25_girlsplot <- top25_plot(df = Baby_Names, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F")
+top25_girlsplot
+
+top25_boysplot <- top25_plot(df = Baby_Names, xaxis_size = 10, xaxis_rows = 2, gender_filter = "M")
+top25_boysplot
+```
+
+## HBO - movies and TV 
+Now, since I want to compare the correlation for girls and boys separately, I need to infer the gender of the HBO and Billboard lists - which I can do by looking each name up in the US-babynames dataset. 
+
+```{r}
+
+# Now I want to join the gender column if the name matches  
+library(stringr)
+# let's get only the first names and add gender - using my add_Gender function
+
+HBO_MF <- add_gender(df = HBO_joined, name_col = name)
+HBO_characters_MF <- add_gender(df = HBO_joined, name_col = character)
+```
+
+Now we can order the characters by their TMBD score in each decade and capture the top 25 male and female actors in each decade. 
+I first wanted to see what the most popular names in TV characters was by applying the top25 plot. 
+This isn't working right now because the column names don't match but I don't want to break something that is workign for the other functions, so I'm going to continue with the ordering! 
+
+Let's just get the top 25 actors and actresses and the top 25 male and female character names.
+
+
+<!-- ```{r} -->
+<!-- top25_girlscharactersplot <- top25_plot(df = HBO_characters_MF, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F", year_col = release_year) -->
+<!-- top25_girlsplot -->
+
+<!-- top25_boycharactersplot <- top25_plot(df = HBO_characters_MF, xaxis_size = 10, xaxis_rows = 2, gender_filter = "M", year_col = release_year) -->
+<!-- top25_boysplot -->
+<!-- ``` -->
+Top 25 overall
+```{r}
+
+Top25_Characters_by_TMDB <- HBO_credits_gendered %>%
+  left_join(HBO_titles, by = "id") %>%
+  filter(!is.na(Gender), !is.na(tmdb_score)) %>%
+  group_by(Gender, character) %>%
+  summarise(
+    avg_score = mean(tmdb_score, na.rm = TRUE),
+    appearances = n(),
+    .groups = "drop"
+  ) %>%
+  group_by(Gender) %>%
+  slice_max(order_by = avg_score, n = 25) %>%
+  ungroup()
+
+library(ggplot2)
+
+ggplot(Top25_Characters_by_TMDB, aes(x = reorder(character, avg_score), y = avg_score, fill = Gender)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~Gender, scales = "free_y") +
+  coord_flip() +
+  labs(title = "Top 25 Characters by Average TMDB Score",
+       x = "Character", y = "Avg TMDB Score") +
+  theme_minimal()
+```
+Now let's do it by decade! I also want some first names but it might fall away if I do first word. 
+Some of the character names have special characters that need cleaning
+
+```{r}
+library(forcats)
+
+Top25_Characters_by_Decade <- HBO_characters_MF %>%
+  filter(!is.na(Gender), !is.na(tmdb_score), !is.na(release_year)) %>%
+mutate(character = iconv(character, from = "", to = "UTF-8", sub = "byte")) %>% 
+  mutate(decade = floor(release_year / 10) * 10) %>%
+  group_by(decade, Gender, character) %>%
+  summarise(
+    avg_score = mean(tmdb_score, na.rm = TRUE),
+    appearances = n(),
+    .groups = "drop"
+  ) %>%
+  group_by(decade, Gender) %>%
+  slice_max(order_by = avg_score, n = 25) %>%
+  ungroup()
+
+ggplot(Top25_Characters_by_Decade, aes(x = avg_score, y = reorder(character, avg_score), size = appearances, colour = Gender)) +
+  geom_point(alpha = 0.7) +
+  facet_wrap(~decade, scales = "free_y") +
+  theme_minimal(base_size = 10) +
+  labs(
+    title = "Top 25 HBO Characters by TMDB Score per Decade",
+    subtitle = "Bubble size shows character appearance count; coloured by gender",
+    x = "Avg TMDB Score", y = "Character"
+  ) +
+  theme(
+    axis.text.y = element_text(size = 6),
+    strip.text = element_text(size = 10),
+    legend.position = "right"
+  ) +
+    
+  scale_size_continuous(range = c(2, 8))
 
 ```
 
-# Question 1
+Since there are so many names and that becomes cluttered, I opted to plot this with only th etop 10 names per decade
 
+```{r}
+library(stringr)
+
+Top10_Cleaned <- Top25_Characters_by_Decade %>%
+  mutate(
+    character = str_remove(character, "\\s*\\(uncredited\\)"),        # remove clutter
+    character = str_trunc(character, 40),                             # truncate long labels
+    Gender = factor(Gender, levels = c("F", "M"))                     # consistent ordering
+  ) %>%
+  group_by(decade, Gender) %>%
+  slice_max(order_by = avg_score, n = 10, with_ties = FALSE) %>%
+  ungroup() %>%
+  arrange(Gender, desc(avg_score)) %>%
+  mutate(character_ordered = fct_inorder(character))
+
+ggplot(Top10_Cleaned, aes(x = avg_score, y = character_ordered, colour = Gender)) +
+  geom_point(size = 3, alpha = 0.8) +
+  facet_wrap(~decade, scales = "free_y") +
+  theme_minimal(base_size = 11) +
+  labs(
+    title = "Top 10 HBO Characters by Gender and TMDB Score per Decade",
+    subtitle = "Ordered by Gender first, then TMDB Score (highest to lowest)",
+    x = "Avg TMDB Score", y = "Character"
+  ) +
+  theme(
+    axis.text.y = element_text(size = 7),
+    strip.text = element_text(size = 10),
+    legend.position = "top"
+  ) +
+  scale_colour_manual(values = c("F" = "#E377C2", "M" = "#1F77B4"))
+```
+```{r}
+Top10_Table <- Top25_Characters_by_Decade %>%
+  mutate(
+    character = str_remove(character, "\\s*\\(uncredited\\)"),
+    character = str_trunc(character, 40),
+    decade = factor(decade),
+    Gender = factor(Gender, levels = c("F", "M"))
+  ) %>%
+  group_by(decade, Gender) %>%
+  slice_max(order_by = avg_score, n = 10) %>%
+  ungroup() %>%
+  arrange(decade, Gender, desc(avg_score)) %>%
+  select(Decade = decade, Gender, Character = character, `Avg TMDB Score` = avg_score, Appearances = appearances)
+
+Top10_Table
+library(gt)
+library(huxtable)
+
+ht <- as_hux(Top10_Table)
+
+ht <- ht %>%
+  set_caption("Top 10 HBO Characters by Gender and TMDB Score per Decade") %>%
+  set_bold(1, everywhere, TRUE) %>%
+  set_number_format(everywhere, "Avg TMDB Score", fmt_pretty(1)) %>%
+  set_all_border_colors("grey90") %>%
+  set_all_padding(2)
+
+ht
+```
+
+
+
+
+This looks incredibly janky! I'm going to try to make it a bit more neat by grouping by gender. I'm also only going to keep names that are found in the baby_names list. 
+
+
+
+
+
+
+
+## BILLBOARD - musicians
+```{r}
+#infer gender again
+Billboard_MF <- add_gender(Top_100_Billboard, name = artist)
+
+```
 

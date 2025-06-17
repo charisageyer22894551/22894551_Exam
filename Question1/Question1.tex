@@ -262,45 +262,72 @@ celebrities and Netflix/ TV shows over the decades.
 \section{\texorpdfstring{Introduction
 \label{Introduction}}{Introduction }}\label{introduction}
 
-References are to be made as follows: Fama \& French
-(\citeproc{ref-fama1997}{1997: 33}) and Grinold \& Kahn
-(\citeproc{ref-grinold2000}{2000}) Such authors could also be referenced
-in brackets (\citeproc{ref-grinold2000}{Grinold \& Kahn, 2000}) and
-together Grinold \& Kahn (\citeproc{ref-grinold2000}{2000}). Source the
-reference code from scholar.google.com by clicking on ``cite'\,' below
-article name. Then select BibTeX at the bottom of the Cite window, and
-proceed to copy and paste this code into your ref.bib file, located in
-the directory's Tex folder. Open this file in Rstudio for ease of
-management, else open it in your preferred Tex environment. Add and
-manage your article details here for simplicity - once saved, it will
-self-adjust in your paper.
+\section{Plot 1: Popular names by decade:
+Girls}\label{plot-1-popular-names-by-decade-girls}
 
-\begin{quote}
-I suggest renaming the top line after @article, as done in the template
-ref.bib file, to something more intuitive for you to remember. Do not
-change the rest of the code. Also, be mindful of the fact that bib
-references from google scholar may at times be incorrect. Reference
-Latex forums for correct bibtex notation.
-\end{quote}
+\includegraphics{Question1_files/figure-latex/unnamed-chunk-1-1.pdf}
 
-To make your graphs look extra nice in latex world, you could use Tikz
-device. Replace dev - `png' with `tikz' in the chunk below. Notice this
-makes the build time longer and produces extra tex files - so if you are
-comfortable with this, set your device to Tikz and try it out:
+\section{Plot 2: Popular names by decade:
+Boys}\label{plot-2-popular-names-by-decade-boys}
+
+\includegraphics{Question1_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\section{Plot 3: Increase in name popularity year-on-year, per decade:
+Girls}\label{plot-3-increase-in-name-popularity-year-on-year-per-decade-girls}
+
+\includegraphics{Question1_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\section{Plot 4: Increase in name popularity year-on-year, per decade:
+Boys}\label{plot-4-increase-in-name-popularity-year-on-year-per-decade-boys}
+
+\includegraphics{Question1_files/figure-latex/unnamed-chunk-4-1.pdf}
+These plots show how year-on-year popularity of names are distributed.
+The 3 names that had the highest uptake per decade is shown in red. This
+can be compared to releases of music. movies where the name is used.
+
+\section{Spearman correlation}\label{spearman-correlation}
+
+\begin{figure}
+\centering
+\includegraphics{Question1_files/figure-latex/fig.spearman-1.pdf}
+\caption{Figure: Spearman correlation for naming persistence over time}
+\end{figure}
+
+We can observe the Spearman rank correlations, portraying naming
+persistence of the Top 25girls and boys names in Figure
+@ref(fig:spearman). In the early years, naming persistence was very
+high, with a correlation close to 1. Naming persistence decreased
+severely in the 1960s and stayed lower. For girls, it also decreased,
+but not as dramatically. Between the 1970s and 1990s, naming patterns in
+the United States began to shift noticeably, particularly for girls. The
+rise of television, pop music, and mass media exposed parents to a wider
+range of influences. Parents were now getting inspiration from soap
+opera characters to chart-topping musicians --- which led to short-lived
+spikes in name popularity
+(\citeproc{ref-abramson2003TVhistory}{Abramson, 2003}). Names like
+Katina (influenced by the 1974 soap ``Where the Heart Is'') illustrate
+how easily cultural moments could shape naming choices. This era marked
+a move away from traditional, family-based naming toward more
+trend-driven and individualistic preferences, contributing to a clear
+decline in naming persistence as measured by year-over-year Spearman
+correlations. This leads us to looking into the correlation between the
+Top-100 Billoard artist names and HBO character and actor names, with
+popular baby names in the US.
 
 \newpage
+
+\begin{verbatim}
+## [1] "Id"     "name"   "year"   "Gender" "State"  "Count"
+\end{verbatim}
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{1}
-\bibitem[\citeproctext]{ref-fama1997}
-Fama, E.F. \& French, K.R. 1997. Industry costs of equity. \emph{Journal
-of financial economics}. 43(2):153--193.
-
-\bibitem[\citeproctext]{ref-grinold2000}
-Grinold, R.C. \& Kahn, R.N. 2000. Active portfolio management.
+\bibitem[\citeproctext]{ref-abramson2003TVhistory}
+Abramson, A. 2003. \emph{The history of television, 1942 to 2000}.
+McFarland.
 
 \end{CSLReferences}
 

@@ -1,9 +1,9 @@
 # create function for plotting the point plots
-top25_plot <- function(df, xaxis_size, xaxis_rows, gender_filter){
+top25_plot <- function(df, xaxis_size, xaxis_rows, gender_filter, year_col){
 
     # create name order
 
-   Top25names_decade <- Top25_Names_by_Decade(df, gender_filter = gender_filter)
+   Top25names_decade <- Top25_Names_by_Decade(df, gender_filter = gender_filter, year_col = {{ year_col }})
 
 name_order <- Top25names_decade %>%
     group_by(Name) %>%
