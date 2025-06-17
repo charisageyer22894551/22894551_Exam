@@ -4,7 +4,7 @@ findmatches_and_matchrate <- function(df, gender_filter = "F", top_n = 25) {
     # Step 1: Get top increasing baby names per decade
     top_babynames_decade <- df %>%
         filter(Gender == gender_filter) %>%
-        mutate(decade = floor(year = year / 10) * 10) %>%
+        mutate(decade = floor( year / 10) * 10) %>%
         group_by(decade, name) %>%
         summarise(Total = sum(Count, na.rm = TRUE), .groups = "drop") %>%
         arrange(name, decade) %>%

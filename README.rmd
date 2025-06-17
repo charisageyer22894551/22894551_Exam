@@ -18,7 +18,7 @@ list.files('/Question1/code/', full.names = T, recursive = T) %>% .[grepl('.R', 
 # Creation of question folders
 library(Texevier)
 
-fmxdat::make_project(Open = T)
+#fmxdat::make_project(Open = T)
 
 #just to show I can use glue::glue :)
 CHOSEN_LOCATION <- "C:/Users/Charisa/OneDrive - Stellenbosch University/Documents/22894551_Exam"
@@ -71,7 +71,9 @@ HBO_MF <- add_gender(HBO_joined)
 HBO_characters_MF <- HBO_MF %>%  rename(actor_name = name) %>% rename(name = character) %>% rename(year = release_year)
 ```
 
-Planning: I will work at a national level. I want to have a summary table (bubble plot) at the end with the 5 most popular names for each decade for boys and girls. 
+### Planning: 
+
+I will work at a national level. I want to have a summary table (bubble plot) at the end with the 5 most popular names for each decade for boys and girls. 
 Interesting: Comparing persistence between TV characters and actors/ music songs or artists
 
 1. factors influencing naming
@@ -123,29 +125,6 @@ top25_increaseplot()
 
 ```
 
-Spearman Correlation
-
-What is the correlation between this period and future periods/ past periods popularity of name usage for girls and boys. 
-
-```{r}
-Spearman()
-```
-
-I want to see them together/ next to each other
-```{r}
-spearman_girls <- Spearman(df = Baby_Names, gender_filter = "F")
-# spearman_girls
-
-spearman_boys <- Spearman(df = Baby_Names,  gender_filter = "M")
-# spearman_boys
-
-# see side by side
-cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
-```
-
-
-
-
 
 
 ## HBO - movies and TV 
@@ -160,13 +139,11 @@ library(stringr)
 HBO_MF <- add_gender(df = HBO_joined, name_col = name)
 HBO_characters_MF <- add_gender(df = HBO_joined, name_col = character)
 ```
-
 Now we can order the characters by their TMBD score in each decade and capture the top 25 male and female actors in each decade. 
 I first wanted to see what the most popular names in TV characters was by applying the top25 plot. 
 This isn't working right now because the column names don't match but I don't want to break something that is workign for the other functions, so I'm going to continue with the ordering! 
 
 Let's just get the top 25 actors and actresses and the top 25 male and female character names.
-
 
 <!-- ```{r} -->
 <!-- top25_girlscharactersplot <- top25_plot(df = HBO_characters_MF, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F", year_col = release_year) -->
@@ -309,12 +286,8 @@ ht
 This looks incredibly janky! I'm going to try to make it a bit more neat by grouping by gender. I'm also only going to keep names that are found in the baby_names list. 
 
 
-
-
-
-
-
 ## BILLBOARD - musicians
+I will see if I get to comparing these! It can be interesting to filter the songs to only those containing a name that appears in the babyname list.
 ```{r}
 #infer gender again
 Billboard_MF <- add_gender(Top_100_Billboard, name = artist)
@@ -350,3 +323,21 @@ top_characters <- HBO_joined %>%
 
 ## SPEARMAN CORRELATION PLOTS
 We want to see naming persistence over time - thus we want to see if top names stay top names over time (year-on-year)
+
+What is the correlation between this period and future periods/ past periods popularity of name usage for girls and boys. 
+
+```{r}
+Spearman()
+```
+
+I want to see them together/ next to each other
+```{r}
+spearman_girls <- Spearman(df = Baby_Names, gender_filter = "F")
+# spearman_girls
+
+spearman_boys <- Spearman(df = Baby_Names,  gender_filter = "M")
+# spearman_boys
+
+# see side by side
+cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
+```
