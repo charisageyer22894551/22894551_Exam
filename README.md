@@ -10,8 +10,8 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##           used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells  546809 29.3    1219121 65.2   686380 36.7
-    ## Vcells 1041041  8.0    8388608 64.0  1876260 14.4
+    ## Ncells  546810 29.3    1219124 65.2   686380 36.7
+    ## Vcells 1041052  8.0    8388608 64.0  1876260 14.4
 
 ``` r
 library(tidyverse)
@@ -195,6 +195,15 @@ top25_increaseplot(Baby_Names)
     ## (`geom_point()`).
 
 ![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+``` r
+top25_increaseplot(Baby_Names, gender_filter = "F")
+```
+
+    ## Warning: Removed 123 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](README_files/figure-markdown_github/unnamed-chunk-7-2.png)
 
 ## HBO - movies and TV
 

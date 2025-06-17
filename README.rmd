@@ -159,6 +159,7 @@ that
 Create function for the increase year-on-year by decade! Now I can see the surges. I also added the function that it shows the top 3 names each decade and makes them a different colour. 
 ```{r}
 top25_increaseplot(Baby_Names)
+top25_increaseplot(Baby_Names, gender_filter = "F")
 ```
 
 ## HBO - movies and TV
