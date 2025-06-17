@@ -32,20 +32,44 @@ Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template
 # I added the data to the respective question data folders
 # I also added the instruction PDF to the settings folder of the root. 
 
+```
+
+# Question 1: Baby names
+Step 1: uploading the data, view the format with view(Baby_/Names)
+```{r}
 library(readr)
 Baby_Names <- read_rds("./data/PracData25/US_Baby_names/Baby_Names_By_US_State.rds")
 Top_100_Billboard <- read_rds("./data/PracData25/US_Baby_names/charts.rds")
 HBO_titles <- read_rds("./data/PracData25/US_Baby_names/HBO_titles.rds")
 HBO_credits <- read_rds("./data/PracData25/US_Baby_names/HBO_credits.rds")
 
+view(Baby_Names)
+view(Top_100_Billboard)
+view(HBO_titles) # need to merge these to to have the release date with the actors/ characters names
+view(HBO_credits)
+
 #Join the HBO titles and credits
 HBO_joined <- HBO_credits %>%
   left_join(HBO_titles, by = "id")
+
 ```
+I came across a biggggg issue with the naming conventions of the "year" and "name" columns, so I decided to rather change the functions back to using "name" and "year" for simplicity and to then rename the columns in each dataset. This felt more simple!
+```{r}
 
-# Question 1: Baby names
-Step 1: uploading the data, view the format with view(Baby_/Names)
+#tidy up the column names for ease of use: 
+Baby_Names <- Baby_Names %>%
+  rename(name = Name) %>% rename(year = Year)
 
+# add gender & rename name columns
+
+Top_100_Billboard <- Top_100_Billboard %>% rename(name = artist) #the dates is in numeric here, can add year col
+Billboard_MF  <- add_gender(df = Top_100_Billboard)
+
+#Hbo artists
+HBO_MF <- add_gender(HBO_joined)
+#now apply to character
+HBO_characters_MF <- HBO_MF %>%  rename(actor_name = name) %>% rename(name = character) %>% rename(year = release_year)
+```
 
 Planning: I will work at a national level. I want to have a summary table (bubble plot) at the end with the 5 most popular names for each decade for boys and girls. 
 Interesting: Comparing persistence between TV characters and actors/ music songs or artists
@@ -76,12 +100,12 @@ str(Baby_Names$Year)
 # just checking that it works: 
 
 Top25_boynames_decade <- Top25_Names_by_Decade(Baby_Names, gender_filter = "M")
+Top25_girlnames_decade <- Top25_Names_by_Decade(Baby_Names, gender_filter = "F")
 ```
+
 I first created a function only for one of the genders and then amended it to be more genericso that we can use it throughout. 
 
 ```{r}
-Top25_girlnames_decade <- Top25_Names_by_Decade(Baby_Names, gender_filter = "F")
-
 # I loaded my plot_orderset function
 top25_girlsplot <- top25_plot(df = Baby_Names, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F")
 top25_girlsplot
@@ -89,6 +113,40 @@ top25_girlsplot
 top25_boysplot <- top25_plot(df = Baby_Names, xaxis_size = 10, xaxis_rows = 2, gender_filter = "M")
 top25_boysplot
 ```
+
+I further wanted to identify names that were taken up more than usual in each decade. So I created a function to extract that. Afterwards, I added another geom_text to name each of the top 3 names taken up such that 
+
+Create function for the increase year-on-year by decade
+```{r}
+
+top25_increaseplot()
+
+```
+
+Spearman Correlation
+
+What is the correlation between this period and future periods/ past periods popularity of name usage for girls and boys. 
+
+```{r}
+Spearman()
+```
+
+I want to see them together/ next to each other
+```{r}
+spearman_girls <- Spearman(df = Baby_Names, gender_filter = "F")
+# spearman_girls
+
+spearman_boys <- Spearman(df = Baby_Names,  gender_filter = "M")
+# spearman_boys
+
+# see side by side
+cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
+```
+
+
+
+
+
 
 ## HBO - movies and TV 
 Now, since I want to compare the correlation for girls and boys separately, I need to infer the gender of the HBO and Billboard lists - which I can do by looking each name up in the US-babynames dataset. 
@@ -263,3 +321,32 @@ Billboard_MF <- add_gender(Top_100_Billboard, name = artist)
 
 ```
 
+
+
+# COMPARISON OF MATCHES
+I want to find the top (n) baby names and see if they match the top (n) actors and characters in that decade. I use a threshold for a movie to be considered influential - only the popular movies are likely to have a big impact on naming. I only take the top 50 actors. 
+
+I will create a function that 
+```{r}
+# Top actors
+top_actors <- HBO_joined %>%
+  mutate(first_name = str_to_lower(word(name, 1))) %>%
+  group_by(first_name) %>%
+  summarise(avg_score = mean(tmdb_score, na.rm = TRUE), appearances = n(), .groups = "drop") %>%
+  slice_max(avg_score, n = 50)  # Top N actors by TMDB score
+
+# Top characters
+top_characters <- HBO_joined %>%
+  mutate(first_name = str_to_lower(word(character, 1))) %>%
+  group_by(first_name) %>%
+  summarise(avg_score = mean(tmdb_score, na.rm = TRUE), appearances = n(), .groups = "drop") %>%
+  slice_max(avg_score, n = 50)
+```
+
+
+
+
+
+
+## SPEARMAN CORRELATION PLOTS
+We want to see naming persistence over time - thus we want to see if top names stay top names over time (year-on-year)
