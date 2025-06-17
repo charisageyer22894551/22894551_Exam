@@ -159,7 +159,7 @@ that
 Create function for the increase year-on-year by decade! Now I can see the surges. I also added the function that it shows the top 3 names each decade and makes them a different colour. 
 ```{r}
 top25_increaseplot(Baby_Names)
-top25_increaseplot(Baby_Names, gender_filter = "F")
+top25_increaseplot(Baby_Names, gender_filter =)
 ```
 
 ## HBO - movies and TV
@@ -409,4 +409,21 @@ spearman_boys <- Spearman(df = Baby_Names,  gender_filter = "M")
 # see side by side
 cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
 ```
+
+# Question 2: MUSIC TASTE
+
+### Planning: 
+
+First: popularity boxplot for each band per album
+ridge graph for each of the 
+
+Compare:
+trends in components of music for spotify
+trends in components for each band 
+(can use ridgeplot ?) ggridges
+
+Within analysis -> how versions (live, studio) affect metrics
+Metallica -> "One" 
+Get a nice comparison song by Coldplay
+
 
