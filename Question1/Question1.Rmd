@@ -136,6 +136,9 @@ Billboard_MF  <- add_gender(df = Top_100_Billboard)
 HBO_MF <- add_gender(HBO_joined)
 #now apply to character
 HBO_characters_MF <- HBO_MF %>%  rename(actor_name = name) %>% rename(name = character) %>% rename(year = release_year)
+
+#remove unnecessary dataframes:
+rm(Top_100_Billboard, HBO_credits, HBO_joined, HBO_titles)
 ```
 
 
@@ -147,7 +150,6 @@ HBO_characters_MF <- HBO_MF %>%  rename(actor_name = name) %>% rename(name = cha
 
 
 # Plot 1: Popular names by decade: Girls
-
 
 ```{r}
 library(tidyverse)
@@ -182,10 +184,6 @@ b
 ```
 These plots show how year-on-year popularity of names are distributed. The 3 names that had the highest uptake per decade is shown in red. This can be compared to releases of music. movies where the name is used. 
 
-
-
-
-
 <!-- ```{r} -->
 <!-- top25_girlscharactersplot <- top25_plot(df = HBO_characters_MF, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F") -->
 <!-- top25_girlsplot -->
@@ -197,6 +195,7 @@ These plots show how year-on-year popularity of names are distributed. The 3 nam
 
 <!-- top25_actor_plot <- top25_actor_plot(df = HBO_MF, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F", name_col = ) -->
 
+\newpage
 
 # Spearman correlation
 
@@ -213,24 +212,35 @@ cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
 
 We can observe the Spearman rank correlations, portraying naming persistence of the Top 25girls and boys names in Figure \@ref(fig:spearman). In the early years, naming persistence was very high, with a correlation close to 1. Naming persistence decreased severely in the 1960s and stayed lower. For girls, it also decreased, but not as dramatically. Between the 1970s and 1990s, naming patterns in the United States began to shift noticeably, particularly for girls. The rise of television, pop music, and mass media exposed parents to a wider range of influences. Parents were now getting inspiration from soap opera characters to chart-topping musicians — which led to short-lived spikes in name popularity [@abramson2003TVhistory]. Names like Katina (influenced by the 1974 soap "Where the Heart Is") illustrate how easily cultural moments could shape naming choices. This era marked a move away from traditional, family-based naming toward more trend-driven and individualistic preferences, contributing to a clear decline in naming persistence as measured by year-over-year Spearman correlations. This leads us to looking into the correlation between the Top-100 Billoard artist names and HBO character and actor names, with popular baby names in the US. 
 
+
 \newpage
+# Comparison with Movie Characters
 
 ```{r}
-names(Baby_Names)
+# #girls
+# girlmatches <- findmatches(Baby_Names)
+# 
+# #boys
+# 
+# boymatches <- findmatches(Baby_Names, gender_filter = "M")
+# 
+# actor_matches <- results$actors
+# character_matches <- results$characters
+# 
+
+
+result_girls <- findmatches_and_matchrate(Baby_Names, top_n = 25)
+print(result_girls$message)
+
+result_boys <- findmatches_and_matchrate(Baby_Names, gender_filter = "M", top_n = 25)
+print(result_boys$message)
+
+
 ```
-
-
+Of the top 25 girl and boy names in the list of baby names, ()% of them are correlated to a popular character or actor in the same decade. 
 
 # References {-}
 
 <div id="refs"></div>
 
-
-# Appendix {-}
-
-## Appendix A {-}
-
-Some appendix information here
-
-## Appendix B {-}
 
