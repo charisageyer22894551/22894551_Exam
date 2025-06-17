@@ -5,7 +5,7 @@ author: Charisa Amorie Geyer (22894551)
 
 # Purpose
 
-This README will take you through my DATA Science 871 exam. All questions, data wrangling and analyses will be outlined in this folder. 
+This README will take you through my DATA Science 871 exam. All questions, data wrangling and analyses will be outlined in this document. 
 
 ```{r}
 
@@ -17,12 +17,21 @@ list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.
 # Creation of question folders
 library(Texevier)
 
+fmxdat::make_project(Open = T)
+
+#just to show I can use glue::glue :)
 CHOSEN_LOCATION <- "C:/Users/Charisa/OneDrive - Stellenbosch University/Documents/22894551_Exam"
 
 Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question1")
 Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question2")
 Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question3")
+Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question4")
+Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question5")
+
+# I added the data to the respective question data folders
 
 ```
+
+# Question 1
 
 
