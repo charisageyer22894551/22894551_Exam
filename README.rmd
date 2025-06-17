@@ -1,17 +1,11 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: github_document
+author: Charisa Amorie Geyer (22894551)
 ---
 
 # Purpose
 
-Purpose of this work folder.
-
-Ideally store a minimum working example data set in data folder.
-
-Add binary files in bin, and closed R functions in code. Human Readable settings files (e.g. csv) should be placed in settings/
-
+This README will take you through my DATA Science 871 exam. All questions, data wrangling and analyses will be outlined in this folder. 
 
 ```{r}
 
@@ -19,6 +13,16 @@ rm(list = ls()) # Clean your environment:
 gc() # garbage collection - It can be useful to call gc after a large object has been removed, as this may prompt R to return memory to the operating system.
 library(tidyverse)
 list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+
+# Creation of question folders
+library(Texevier)
+
+CHOSEN_LOCATION <- "C:/Users/Charisa/OneDrive - Stellenbosch University/Documents/22894551_Exam"
+
+Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question1")
+Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question2")
+Texevier::create_template(directory = glue::glue("{CHOSEN_LOCATION}/"), template_name = "Question3")
+
 ```
 
 
