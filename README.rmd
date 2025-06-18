@@ -614,7 +614,7 @@ Now I will adjust this to find the most popular genres, based on the total movie
 
 ```
 
-# Ridge plots
+## Ridge plots
 I will adjust the ridgesplot function I created for question 2 but didn't use here! 
 I now created ggridgesplot. I added the mean score to the plot, added the average mean point. I changed the display around a bit but it actually looks best if I just keep the mean point small and then add the text on top of that. 
 
@@ -640,7 +640,30 @@ movie_scatterplot(Titles)
 ```
 
 
-# Question 4 
+# Question 4:
+
+### Planning: 
+
+1. Create the bespoke function to get the data into R based on stackoverflow. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -658,7 +681,7 @@ Health <- "./data/PracData25/Health/HealthCare.csv" %>% read_csv()
 ```
 
 
-# What is BMR? 
+## What is BMR? 
 
 ## BMR analysis: 
 ideal basal metabolic rate is calculated based on gender and age. Here is the table below which can help you in interpreting the BMR of your body.

@@ -144,6 +144,7 @@ It the rate at which your body burns calories while at rest, performing essentia
 This threshold is calculated (differently for males and female). It consists of a metric similar to BMI, where you take a transformed value of your height, weight and activity levels to come to a factor. It is sometimes calculated to see how many calories one should consume to maintain your current weight. 
 
 # Slide 4: Determinants of Health
+Source: @sprintmedical_bmr_2022
 * Age -> older people have slower metabolisms
 * Muscle mass -> muscles burn calories
 * Body size -> having bigger organs requires more energy to keep you alive
