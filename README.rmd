@@ -19,6 +19,11 @@ library(tidyverse)
 library(lubridate)
 library(stringr)
 library(readr)
+library(ggridges)
+library(ggplot2)
+library(viridis)
+library(hrbrthemes)
+
 
 list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
 list.files('./22894551_Exam/Question1/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
@@ -426,4 +431,141 @@ Within analysis -> how versions (live, studio) affect metrics
 Metallica -> "One" 
 Get a nice comparison song by Coldplay
 
+### Data cleaning! 
+I had trouble with removing the special character in some of Metallica's album names with gsub, but it worked better with iconv ! So I created a function to use for later also!  
+```{r}
 
+# upload data
+coldplay <- read_csv("Data/Coldplay_vs_Metallica/Coldplay.csv")
+metallica <- read_csv("Data/Coldplay_vs_Metallica/metallica.csv")
+spotify <- read_rds("Data/Coldplay_vs_Metallica/Broader_Spotify_Info.rds")
+billboard_100 <- read_rds("Data/Coldplay_vs_Metallica/charts.rds")
+
+#create the year cols
+
+coldplay <- coldplay %>%
+  mutate(year = year(as.Date(release_date)))
+
+metallica <- metallica %>% 
+    mutate(year = year(as.Date(release_date)))
+
+billboard_100 <- billboard_100 %>% 
+    mutate(year = year(as.Date(date)))
+
+# Let's name the columns consistently & remove special characters in all dataframes
+
+metallica <- metallica %>% rename(song = name) %>% mutate(artist = "Metallica") # remove special isn't working yet
+coldplay <- coldplay %>% rename(album = album_name, song = name) %>%  mutate(artist = "Coldplay")
+spotify <- spotify %>% rename(song = name)
+
+# billboard is fine
+
+#remove the special characters
+
+# metallica %>% 
+#       mutate(album = gsub("�", "", album))
+#         mutate(album = gsub("\uFFFD", "", album, fixed = TRUE))
+# 
+# metallica %>%
+#   mutate(album = gsub("[^[:ascii:]]", "", album))
+
+metallica %>%
+  mutate(album = iconv(album, from = "UTF-8", to = "ASCII", sub = ""))
+
+metallica <- remove_special(metallica, c(album, song))
+
+coldplay <- remove_special(coldplay, c(album, song))
+
+```
+
+To have a good comparison group for trends in popular music, I created a Spotify list that only contains songs that were also on the Billboard Top 100. I created the function called top100 for this. 
+```{r}
+spotify_top100 <- top100(spotify)
+```
+
+## Boxplots of album popularity
+
+Just some regular boxplots. I also then divided it up by live and remastered albums for the respective bands for more sleek graphs because it was looking a bit too cluttered. 
+
+The popularity of each of the bands are shown in a box-and-whiskers plot, showing the popularity scores per album. 
+
+## Coldplay
+### Overall
+```{r}
+albumpop_CP <- boxplotpopbyalbum(coldplay)
+albumpop_CP
+```
+Coldplay is known for its live albums, with the live albums of "Live in Bueonos Aires" and "Live 2012" surpassing albums like "Love in Tokyo" and "Everyday Life" in popularity. 
+
+### Live
+```{r}
+albumpop_CPL <- boxplotpopbyalbum(coldplay_live)
+albumpop_CPL 
+```
+
+## Metallica
+### Overall
+```{r}
+albumpop_ML <- boxplotpopbyalbum(metallica)
+albumpop_ML
+```
+For Metallica, the remastered albums gain more traction, as seen by 7 of the top 10 most popular albums being remastered albums. 
+
+### Studio
+```{r}
+albumpop_MLS <- boxplotpopbyalbum(metallica_studio)
+albumpop_MLS
+```
+
+
+## Violin plots for song popularity within each album
+ I saw on R graph gallery there are some nice new plots! Yay! So I can pick some for the rest of the analysis. 
+  
+Now let's look deeper into the popularity of the songs within each album. 
+I created the function for this -> see songsinalbum_pop
+
+```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
+songspop <- songsinalbum_pop(together_studio)
+```
+
+## Ridgeline plot of trends in the components over time 
+WIll be able to see over the years what type of music they started to do 
+At first I tried this ggridges, but since there are so many years it is not great. I think I'll rather use the trends by components.
+
+```{r}
+ridgeplots(spotify, tempo)
+```
+
+Now I can compare the trends for both bands to popular spotify songs! 
+First I need to create the function for the plots! 
+
+I see now that the spotify timeframe is not the same as coldplay. Let's adjust Spotify by adding a filter that the minimum year is the same as the artist (this will be helpful for Metallica! 
+
+## Timetrends
+
+Now I can do this for different components, whichever suits the band best.
+```{r}
+timetrend_CP_dance<- timetrend_comp(df = coldplay_studio, artist = "Coldplay", variable = "danceability")
+library(glue)
+timetrend_CP_dance
+```
+ 
+ ## Compare studio vs Live albums
+ 
+ Since I already created a live dataframe and a studio dataframe for ecah, I can just use that as the "comparison group" as I had spotify earlier. I just adusted the function a little and created a new one with the right dataframe references, because spotify was coded into the function earlier. 
+ 
+```{r}
+# Live vs Studio albums
+#We can see that energy trends are much lower in Live albums, for both Coldplay and Metallica, but especially for Metallica. 
+liveCP <- live_timetrend_comp(coldplay, coldplay_live, artist_name = "Coldplay Studio", compare_name = "Live Albums", variable = "energy")
+liveCP
+
+liveML <- live_timetrend_comp(metallica, metallica_live, artist_name = "Metallica Studio", compare_name = "Live Albums", variable = "energy")
+liveML
+```
+
+The PDF was knitting the plots out of frame so I just adjusted those figures with a fig.pos. 
+
+
+ 
+ 
