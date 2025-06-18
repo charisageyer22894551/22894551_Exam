@@ -23,6 +23,8 @@ library(ggridges)
 library(ggplot2)
 library(viridis)
 library(hrbrthemes)
+library(ggstream)
+
 
 
 list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
@@ -436,10 +438,10 @@ I had trouble with removing the special character in some of Metallica's album n
 ```{r}
 
 # upload data
-coldplay <- read_csv("Data/Coldplay_vs_Metallica/Coldplay.csv")
-metallica <- read_csv("Data/Coldplay_vs_Metallica/metallica.csv")
-spotify <- read_rds("Data/Coldplay_vs_Metallica/Broader_Spotify_Info.rds")
-billboard_100 <- read_rds("Data/Coldplay_vs_Metallica/charts.rds")
+coldplay <- read_csv("./data/PracData25/Coldplay_vs_Metallica/Coldplay.csv")
+metallica <- read_csv("./data/PracData25/Coldplay_vs_Metallica/metallica.csv")
+spotify <- read_rds("./data/PracData25/Coldplay_vs_Metallica/Broader_Spotify_Info.rds")
+billboard_100 <- read_rds("./data/PracData25/Coldplay_vs_Metallica/charts.rds")
 
 #create the year cols
 
@@ -472,9 +474,9 @@ spotify <- spotify %>% rename(song = name)
 metallica %>%
   mutate(album = iconv(album, from = "UTF-8", to = "ASCII", sub = ""))
 
-metallica <- remove_special(metallica, c(album, song))
+metallica <- remove_special(metallica, col_name = c(song, album))
 
-coldplay <- remove_special(coldplay, c(album, song))
+coldplay <- remove_special(coldplay, col_name = c(song, album))
 
 ```
 
@@ -566,6 +568,63 @@ liveML
 
 The PDF was knitting the plots out of frame so I just adjusted those figures with a fig.pos. 
 
+I still need to add some write-up and just decided which boxplots to include in the final PDF.
 
- 
- 
+# Question 3: Netflix
+Load the data: 
+
+## upload data
+
+```{r}
+Titles <- read_rds("./Question3/data/netflix/titles.rds")
+Credits <- read_rds("./Question3/data/netflix/credits.rds")
+Movie_Info <- read_csv(".Question3/data/netflix/netflix_movies.csv")
+```
+## Data cleaning!
+
+I started by looking at Titles. 
+
+I cleaned the genres and production countries columns -> now I'm going to look at which countries produce the most movies, and see then which genres they produce. 
+
+I think I will be able to create a ridgesplot here finally! yay!
+
+```{r}
+Titles <- clean_genres_titles(Titles)
+Titles <- clean_production_countries(Titles)
+```
+
+First i created a top10 countries function on its own, but i rather combined it with the plot function to become top10countires_plot
+
+## Plot 1 
+```{r}
+top10_plot <- top10countries_plot(Titles)
+top10_plot
+```
+
+## Plot 2
+Now I will adjust this to find the most popular genres, based on the total movie count. I can just adjust the function to be genres in stead of countries! 
+
+```{r}
+
+```
+
+# Ridge plots
+I will adjust the ridgesplot function I created for question 2 but didn't use here! 
+I now created ggridgesplot. I added the mean score to the plot, added the average mean point. I changed the display around a bit but it actually looks best if I just keep the mean point small and then add the text on top of that. 
+
+## Genre ratings of top countries
+The genres with the highest average rating overall is documentary and history. This is not significantly higher than many other genres, often only being 0.1 points above another, ona scale of 1-10. 
+
+```{r}
+ggridgeIMDBscore <- ggridgesplot(Titles)
+ggridgeIMDBscore
+```
+
+## Length of top rated movies
+Here i can use the violin plot I used earlier for the song popularity! 
+I also want to do the ggstream somewhere :) 
+
+```{r}
+violin_lengthplot(Titles)
+
+```
