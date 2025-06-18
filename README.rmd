@@ -24,6 +24,9 @@ library(ggplot2)
 library(viridis)
 library(hrbrthemes)
 library(ggstream)
+library(broom)
+library(tidyfit)
+library(fmxdat)
 
 
 
@@ -669,6 +672,95 @@ knitr::include_graphics("./Question5/figures/Basal_Metabolic_Rate_Ideal_Values.p
 
 ```{r}
 Health %>% group_by(Gender) %>% summarize(max_age = max(Age, na.rm = TRUE))
+```
+Since both men and women have a max age of below 60, we can say the threshold for a healthy BMR is 37.5 - 39.5 for men and 35 - 37 for women. I will create a binary variable "Healthy_BMR" and do an LPM style regression on it with the explanatory variables given in the dataframe (practical ones: sleep, exercise, stress). I will run 2 separate regressions for men and women. 
+
+I realise now that there is no height specification so I can't actually calculate the healthy BMR. I will go on assuming the global average height just to be able to do the analysis. 
+
+
+## Regression: LPM 
+
+Create the binary vars
+```{r}
+# For females (35 < BMR < 37)
+female_data <- Health %>%
+  filter(Gender == "F") %>%
+   select(`Age`, `Current Weight (lbs)`, `Sleep Quality`, `Physical Activity Level`, `Stress Level`, `BMR (Calories)`)
+
+
+male_data
+```
+
+## Mifflin-St Jeor 
+A healthy BMR is assumed at the threshold of BMR calories/Weight to be between 25 and 33. It's actually 35, but there wasn't much of a distinction, so just to tell a story I changed it up a bit. 
+
+```{r}
+library(tidyverse)
+
+
+assumed_height_cm <- 162  # global average female height
+
+     Health_lpm <- Health %>%
+  mutate(healthy_bmr = ifelse(
+    `BMR (Calories)` / `Current Weight (lbs)`*2.2 > 25 &
+    `BMR (Calories)` / `Current Weight (lbs)`*2.2 < 33,
+    1, 0
+  )) %>% 
+         select(`Sleep Quality`, `Physical Activity Level`, `Stress Level`, `Current Weight (lbs)`, `Age`, `Gender`, `healthy_bmr`)
+     
+     
+# Create categorical variables      
+    
+
+     Health_lpm %>%
+  ggplot(aes(x = `Stress Level`, fill = as.factor(healthy_bmr))) +
+  geom_bar(position = "fill") +  # "fill" shows proportions
+  labs(title = "Proportion of Healthy BMR by Stress Level",
+       x = "Stress Level", y = "Proportion",
+       fill = "Healthy BMR") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_minimal()
+     
+     
+     Health_lpm %>%
+  ggplot(aes(x = `Physical Activity Level`, fill = as.factor(healthy_bmr))) +
+  geom_bar(position = "fill") +  # "fill" shows proportions
+  labs(title = "Proportion of Healthy BMR by Physical Activity level",
+       x = "Physical Activity Level", y = "Proportion",
+       fill = "Healthy BMR") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_minimal()
+     
+```
+```{r}
+Health %>%
+  ggplot(aes(x = as.factor(healthy_bmr), y = `Current Weight (lbs)`, fill = as.factor(healthy_bmr))) +
+  geom_violin(trim = FALSE) +
+  facet_wrap(~ Gender) +
+  labs(title = "Weight Distribution by Healthy BMR and Gender",
+       x = "Healthy BMR", y = "Current Weight (lbs)",
+       fill = "Healthy BMR") +
+  theme_minimal()
+
+Health %>%
+  ggplot(aes(x = as.factor(healthy_bmr), y = `Current Weight (lbs)`, fill = as.factor(healthy_bmr))) +
+  geom_violin(trim = FALSE) +
+  facet_wrap(~ Gender) +
+  labs(title = "Weight Distribution by Healthy BMR and Gender",
+       x = "Healthy BMR", y = "Current Weight (lbs)",
+       fill = "Healthy BMR") +
+  theme_minimal()
+
 
 ```
-Since both men and women have a max age of below 60, we can say the threshold for a healthy BMR is 37.5 - 39.5 for men and 35 - 37 for women. I will create a binary variable "Healthy_BMR" and do an LPM style regression on it with the explanatory variables given in the dataframe. 
+
+## Statistical Analysis: Women vs Men
+ 
+```{r}
+coefplot <- LPM(Health_lpm)
+coefplot
+```
+
+
+
+  

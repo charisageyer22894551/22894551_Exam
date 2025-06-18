@@ -1,39 +1,78 @@
 ---
 title: "An Apple A Day"
-subtitle: "Or is it a nap?"
-output:
+subtitle: "Or is it a Nap?"
+output: 
     powerpoint_presentation:
-    reference_doc: custom_template.pptx
+        reference_doc: custom_template.pptx
 author: Charisa Amorie Geyer (22894551)
 date: "2025-06-18"
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(readr)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(readr)
+library(ggridges)
+library(ggplot2)
+library(viridis)
+library(hrbrthemes)
+library(ggstream)
+library(broom)
+library(tidyfit)
+library(fmxdat)
+list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+Health <- "./data/Health/HealthCare.csv" %>% read_csv()
+Health_lpm <- thresholdBMR(Health)
+
 ```
 
-## R Markdown
+## Health is Wealth
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Taking care of one's health is crucial because it impacts overall well-being, including physical, mental, and emotional health, which in turn affects daily life, productivity, and longevity. 
+
+Good health allows individuals to function optimally, cope with stress, and enjoy a higher quality of life. 
+
+## What is BMR? 
+Basal metabolic rate is the speed at which your body performs basic metabolic functions. 
+
+It the rate at which your body burns calories while at rest, performing essential functions like breathing and circulation. 
+
+It represents the minimum number of calories needed to keep your body functioning at a basic level.
+
+Essentially, it's the energy your body uses just to stay alive when you're not actively doing anything. 
 
 
+## A healthy BMR threshold
+![The Ideal BMR by gender and age](figures/Basal_Metabolic_Rate_Ideal_Values.png){width="70%"}
 
-## Slide with Bullets
+## Determinants of BMR
+- Age
+- Muscle mass
+- Body size
+- Gender
+- Physical Activity
+- Diet
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
 
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
+## Who is healthy?
+```{r}
+ g <- stackedbar_BMR(Health_lpm, category_col = "Stress Level")
+ h <- stackedbar_BMR(Health_lpm, category_col = "Physical Activity Level")
+cowplot::plot_grid(g, h, ncol = 1)
 ```
 
-## Slide with Plot
-
-```{r pressure}
-plot(pressure)
+## Let's look at the stats
+```{r}
+ LPM(Health_lpm) 
 ```
 
+## What's next?
+
+- Sleep more
+- Exercise less
+- Stop stressing about your stress levels! 
+
+## Thanks for listening!
