@@ -623,8 +623,52 @@ ggridgeIMDBscore
 ## Length of top rated movies
 Here i can use the violin plot I used earlier for the song popularity! 
 I also want to do the ggstream somewhere :) 
+The IMDB scores were a good idea but they are looking a bit ugly. So I removed the jitter_plot! 
 
 ```{r}
 violin_lengthplot(Titles)
+```
+
+```{r}
+movie_scatterplot(Titles)
+```
+
+
+# Question 4 
+
+
+
+# Question 5: Health is Wealth
+a short report on health
+
+Let's set up: 
+```{r}
+library(readr)
+library(tidyverse)
+Health <- "./data/PracData25/Health/HealthCare.csv" %>% read_csv()
+```
+```{r}
 
 ```
+
+
+# What is BMR? 
+
+## BMR analysis: 
+ideal basal metabolic rate is calculated based on gender and age. Here is the table below which can help you in interpreting the BMR of your body.
+
+definition: Basal metabolic rate is the speed at which your body performs basic metabolic functions.
+
+## Normal thresholds
+
+
+```{r fig.cap="BMR thresholds", out.width="70%", echo=FALSE}
+knitr::include_graphics("./Question5/figures/Basal_Metabolic_Rate_Ideal_Values.png")
+
+```
+
+```{r}
+Health %>% group_by(Gender) %>% summarize(max_age = max(Age, na.rm = TRUE))
+
+```
+Since both men and women have a max age of below 60, we can say the threshold for a healthy BMR is 37.5 - 39.5 for men and 35 - 37 for women. I will create a binary variable "Healthy_BMR" and do an LPM style regression on it with the explanatory variables given in the dataframe. 

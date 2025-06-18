@@ -1,0 +1,39 @@
+---
+title: "An Apple A Day"
+subtitle: "Or is it a nap?"
+output:
+    powerpoint_presentation:
+    reference_doc: custom_template.pptx
+author: Charisa Amorie Geyer (22894551)
+date: "2025-06-18"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+

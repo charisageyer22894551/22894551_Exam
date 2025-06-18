@@ -137,7 +137,7 @@ The United States, India and Great Britain produce the highest amount of movies,
 top10countries_plot <- top10_plot(Titles, "production_countries")
 top10countries_plot
 ```
-
+\newpage
 # Genre popularity
 The most common movie genres by movie production count are drama and comedy, followed by thriller and action. This says nothing about the quality of movies or if th emovies were popular and successful. 
 ```{r}
@@ -156,6 +156,7 @@ ggridgeIMDBscore
 ```{r}
 violin_lengthplot(Titles)
 ```
+\newpage
 
 # Rating of movies by runtime
 As we can see in the scatterplot, the movies with the highest ratings (above the 7.5 threshold), are of various lengths. However, it remains bundled between 60 and 120 minutes. 
