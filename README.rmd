@@ -646,13 +646,67 @@ movie_scatterplot(Titles)
 
 1. Create the bespoke function to get the data into R based on stackoverflow. 
 
+joh that was a struggle! I first tried to do all the columns at once with c(.. .. .. ), but you can't do that before :=. then I specified all of the non-character (default) ones and it worked! yay!
+also when you use janitor to make it snake case it makes everything characters, so I just changed it back to the right numeric/ integer afterwards. 
+
+I also create decade and a self_made
+
+2. main points
+## Countries of generational wealth
+
+I created a function to plot the proportion of self-made vs inherited billionaires -> propbills
+```{r}
+USpropbills <- propbills(Billions, location_region = "North America")
+#i tried to do all other than US: 
+#notUSpropbills <- Billions %>% filter(location_region != "North America") %>% propbills()
+```
+
+but that didn't work. So I ended up just creating a little extra function to look at the non-US!
+```{r}
+# all other than us: 
+nonUSpropbills <- Billions %>% filter(location_region != "North America") %>% propbills_noregion()
+cowplot::plot_grid(USpropbills, nonUSpropbills)
+
+```
+
+
+## Industries of self-made millionaires in the 90s
+I made a function for this to do a scatterplot with a trendline, but it looks very bad, so i am opting for a ggridges again - i can adapt my q3 ggridges function to work here! 
+I also decided to include the financial sector, as it looked prominent when I had a look at the numbers. 
+```{r}
+# just having a look at the numbers
+Billions %>% filter(self_made == "TRUE") %>% group_by(industry, year) %>% count()
+
+# example of what didn't work
+billions_sectors90s(Billions)
+```
 
 
 
+## Sectoral analysis
+software vs consumer sector by region (based on country GDP)
 
+```{r}
+library(ggridges)
+ggridgesbillions(Billions)
+```
 
+## Heatmap of Billionaires in the world
+I got the map from the rnaturalearth package that is referenced on r graph gallery. The data one has the column to match with -> now I can create it. I also added a tag with the country with the most! 
+I realised now that the column names of the countries don't always match, that's why the distrib is different.
+If I have time I will get back to this! 
 
+```{r}
+install.packages("rnaturalearth")
+install.packages("rnaturalearthdata")
 
+library(tidyverse)
+library(rnaturalearth) # For world map data
+library(viridis)       # For color scales
+library(rnaturalearthdata)
+
+heatmap_billions(Billions)
+```
 
 
 

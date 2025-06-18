@@ -13,8 +13,7 @@ df <- read_csv(
         `company.founded` = col_integer(),
         `demographics.age` = col_integer(),
         `location.gdp` = col_number(),
-        `wealth.worth in billions` = col_number()
-    ),
+        `wealth.worth in billions` = col_number()),
     locale = locale(decimal_mark = ",", grouping_mark = ".")
 ) # Change the , in the decimals to .
 
