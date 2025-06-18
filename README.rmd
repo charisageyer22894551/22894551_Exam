@@ -28,11 +28,14 @@ library(broom)
 library(tidyfit)
 library(fmxdat)
 
-
+# Load functions from all question projects
 
 list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
 list.files('./22894551_Exam/Question1/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
-
+list.files('./22894551_Exam/Question2/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+list.files('./22894551_Exam/Question3/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+list.files('./22894551_Exam/Question4/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+list.files('./22894551_Exam/Question5/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
 
 # Creation of question folders
 library(Texevier)
@@ -686,54 +689,30 @@ Create the binary vars
 female_data <- Health %>%
   filter(Gender == "F") %>%
    select(`Age`, `Current Weight (lbs)`, `Sleep Quality`, `Physical Activity Level`, `Stress Level`, `BMR (Calories)`)
-
-
-male_data
 ```
 
 ## Mifflin-St Jeor 
 A healthy BMR is assumed at the threshold of BMR calories/Weight to be between 25 and 33. It's actually 35, but there wasn't much of a distinction, so just to tell a story I changed it up a bit. 
 
+I created a function to add a healthy threshold for BMR score.  
 ```{r}
 library(tidyverse)
-
-
-assumed_height_cm <- 162  # global average female height
-
-     Health_lpm <- Health %>%
-  mutate(healthy_bmr = ifelse(
-    `BMR (Calories)` / `Current Weight (lbs)`*2.2 > 25 &
-    `BMR (Calories)` / `Current Weight (lbs)`*2.2 < 33,
-    1, 0
-  )) %>% 
-         select(`Sleep Quality`, `Physical Activity Level`, `Stress Level`, `Current Weight (lbs)`, `Age`, `Gender`, `healthy_bmr`)
      
-     
-# Create categorical variables      
+ Health_lpm <- thresholdBMR(Health)
     
+ g <- stackedbar_BMR(Health_lpm, category_col = "Stress Level")
+ h <- stackedbar_BMR(Health_lpm, category_col = "Physical Activity Level")
+ 
+cowplot::plot_grid(g, h, ncol = 1)
 
-     Health_lpm %>%
-  ggplot(aes(x = `Stress Level`, fill = as.factor(healthy_bmr))) +
-  geom_bar(position = "fill") +  # "fill" shows proportions
-  labs(title = "Proportion of Healthy BMR by Stress Level",
-       x = "Stress Level", y = "Proportion",
-       fill = "Healthy BMR") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  theme_minimal()
-     
-     
-     Health_lpm %>%
-  ggplot(aes(x = `Physical Activity Level`, fill = as.factor(healthy_bmr))) +
-  geom_bar(position = "fill") +  # "fill" shows proportions
-  labs(title = "Proportion of Healthy BMR by Physical Activity level",
-       x = "Physical Activity Level", y = "Proportion",
-       fill = "Healthy BMR") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  theme_minimal()
-     
 ```
+
 ```{r}
-Health %>%
+
+Health %>% healthy_bmr = ifelse(`BMR (Calories)` / `Current Weight (lbs)`*2.2 > 25 &
+                `BMR (Calories)` / `Current Weight (lbs)`*2.2 < 33, 1, 0)
+
+Health_lpm %>%
   ggplot(aes(x = as.factor(healthy_bmr), y = `Current Weight (lbs)`, fill = as.factor(healthy_bmr))) +
   geom_violin(trim = FALSE) +
   facet_wrap(~ Gender) +

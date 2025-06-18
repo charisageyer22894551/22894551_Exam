@@ -144,12 +144,12 @@ It the rate at which your body burns calories while at rest, performing essentia
 This threshold is calculated (differently for males and female). It consists of a metric similar to BMI, where you take a transformed value of your height, weight and activity levels to come to a factor. It is sometimes calculated to see how many calories one should consume to maintain your current weight. 
 
 # Slide 4: Determinants of Health
-Age -> older people have slower metabolisms
-Muscle mass -> muscles burn calories
-Body size -> having bigger organs requires more energy to keep you alive
-Gender -> Men and Women have different bodily functions and hormone levels
-Physical Activity -> strenous activity requires energy
-Diet -> macronutrient intake makes a difference, more than just calories
+* Age -> older people have slower metabolisms
+* Muscle mass -> muscles burn calories
+* Body size -> having bigger organs requires more energy to keep you alive
+* Gender -> Men and Women have different bodily functions and hormone levels
+* Physical Activity -> strenous activity requires energy
+* Diet -> macronutrient intake makes a difference, more than just calories
 
 # Silde 5: Who is healthy
 We can see here, that in this dataset of persons between 20 and 60, the activity levels indicate an unexpected result. Further, stress levels are also not following a clear trend. This is indicative of another underlying fcactor determining the health.  
@@ -168,9 +168,9 @@ coefplot <- LPM(Health_lpm)
 coefplot
 ```
 ## What's next? 
-- sleep more
-- exercise less
-- stop stressing about your stress levels!
+* sleep more
+* exercise less
+* stop stressing about your stress levels!
 This is of course a joke, and data can always be wrangled in a way to fit a nrrative. So the lesson to learn is: DON'T BELIEVE EVERYTHING THAT YOU SEE! Especially not if it comes from an amateur analyst! 
 
 ## Greetings
