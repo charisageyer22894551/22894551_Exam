@@ -212,7 +212,7 @@ I will now revisit my definition of HBO_characters_MF.
 I also want some first names but it might fall away if I do first word. 
 Some of the character names have special characters that need cleaning
 
-# I never got time to get this to work :( 
+### I never got time to get this to work :( 
 
 ```{r, include = FALSE}
 # 
@@ -437,7 +437,7 @@ cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
 ```
 
 
-# Question 2: MUSIC TASTE
+# QUESTION 2: MUSIC TASTE
 
 ### Planning: 
 
@@ -609,7 +609,7 @@ The PDF was knitting the plots out of frame so I just adjusted those figures wit
 
 I still need to add some write-up and just decided which boxplots to include in the final PDF.
 
-# Question 3: Netflix
+# QUESTION 3: Netflix
 Load the data: 
 
 ## upload data
@@ -674,7 +674,7 @@ movie_scatterplot(Titles)
 ```
 
 
-# Question 4:
+# QUESTION 4: BILLIONAIRES
 
 ### Planning: 
 
@@ -750,7 +750,7 @@ heatmap_billions(Billions)
 
 
 
-# Question 5: Health is Wealth
+# QUESTION 5: HEALTH IS WEALTH
 a short report on health
 
 Let's set up: 
@@ -838,16 +838,6 @@ Health_lpm %>%
        x = "Healthy BMR", y = "Current Weight (lbs)",
        fill = "Healthy BMR") +
   theme_minimal()
-
-Health %>%
-  ggplot(aes(x = as.factor(healthy_bmr), y = `Current Weight (lbs)`, fill = as.factor(healthy_bmr))) +
-  geom_violin(trim = FALSE) +
-  facet_wrap(~ Gender) +
-  labs(title = "Weight Distribution by Healthy BMR and Gender",
-       x = "Healthy BMR", y = "Current Weight (lbs)",
-       fill = "Healthy BMR") +
-  theme_minimal()
-
 
 ```
 

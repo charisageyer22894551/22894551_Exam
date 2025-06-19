@@ -10,8 +10,8 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##           used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells  548107 29.3    1222830 65.4   686380 36.7
-    ## Vcells 1047907  8.0    8388608 64.0  1876260 14.4
+    ## Ncells  548106 29.3    1222827 65.4   686380 36.7
+    ## Vcells 1047878  8.0    8388608 64.0  1876260 14.4
 
 ``` r
 library(tidyverse)
@@ -302,7 +302,7 @@ will now revisit my definition of HBO_characters_MF.
 I also want some first names but it might fall away if I do first word.
 Some of the character names have special characters that need cleaning
 
-# I never got time to get this to work :(
+### I never got time to get this to work :(
 
 This ALSO looks incredibly janky! I’m going to try to make it a bit more
 neat by grouping by gender. I’m also only going to keep names that are
@@ -463,7 +463,7 @@ cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
 
 ![](README_files/figure-markdown_github/spearman%20separate%20not%20used-1.png)
 
-# Question 2: MUSIC TASTE
+# QUESTION 2: MUSIC TASTE
 
 ### Planning:
 
@@ -746,7 +746,7 @@ figures with a fig.pos.
 I still need to add some write-up and just decided which boxplots to
 include in the final PDF.
 
-# Question 3: Netflix
+# QUESTION 3: Netflix
 
 Load the data:
 
@@ -854,7 +854,7 @@ movie_scatterplot(Titles)
 
 ![](README_files/figure-markdown_github/movie%20ratings%20by%20movie%20length%20scatter-1.png)
 
-# Question 4:
+# QUESTION 4: BILLIONAIRES
 
 ### Planning:
 
@@ -988,7 +988,7 @@ heatmap_billions(Billions)
 
 ![](README_files/figure-markdown_github/worldmap%20heatmap-1.png)
 
-# Question 5: Health is Wealth
+# QUESTION 5: HEALTH IS WEALTH
 
 a short report on health
 
@@ -1117,19 +1117,6 @@ Health_lpm %>%
 ```
 
 ![](README_files/figure-markdown_github/plotting%20weight%20distributions-1.png)
-
-``` r
-Health %>%
-  ggplot(aes(x = as.factor(healthy_bmr), y = `Current Weight (lbs)`, fill = as.factor(healthy_bmr))) +
-  geom_violin(trim = FALSE) +
-  facet_wrap(~ Gender) +
-  labs(title = "Weight Distribution by Healthy BMR and Gender",
-       x = "Healthy BMR", y = "Current Weight (lbs)",
-       fill = "Healthy BMR") +
-  theme_minimal()
-```
-
-![](README_files/figure-markdown_github/plotting%20weight%20distributions-2.png)
 
 ## Statistical Analysis: Women vs Men
 
