@@ -685,9 +685,9 @@ also when you use janitor to make it snake case it makes everything characters, 
 
 I also create decade and a self_made
 ```{r bespoke and data upload}
-file_path = "./data/Billions/billionaires.csv"
+file_path = "./data/PracData25/Billions/billionaires.csv"
 
-Billions <- "./data/Billions/billionaires.csv" %>% bespoke_function()
+Billions <- "./data/PracData25/Billions/billionaires.csv" %>% bespoke_function()
 ```
 
 2. main points
