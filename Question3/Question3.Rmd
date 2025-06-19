@@ -129,7 +129,7 @@ Titles <- clean_production_countries(Titles)
 <!-- ############################## -->
 
 # Introduction 
-IS there a market for another streaming service? If there is, the content included in its library must be particularly enticing. In an industry that is becoming more and more saturated - trends in preferences and production need to be analysed. 
+Is there a market for another streaming service? If there is, the content included in its library must be particularly enticing. In an industry that is becoming more and more saturated - trends in preferences and production need to be analysed. 
 
 
 # Top production countries
@@ -141,7 +141,7 @@ top10countries_plot
 ```
 \newpage
 # Genre popularity
-The most common movie genres by movie production count are drama and comedy, followed by thriller and action. This says nothing about the quality of movies or if the movies were popular and successful. 
+The most common movie genres by movie production count are drama and comedy, followed by thriller and action. However, high production frequency doesn't correlate with quality - these genres show the widest quality variance in ratings. Thriller and action films follow, indicating audience demand for suspense-driven content.
 ```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
 top10genres_plot <- top10_plot(Titles, "genres")
 top10genres_plot
@@ -149,7 +149,7 @@ top10genres_plot
 
 \newpage
 # Genre ratings of top countries
-The genres with the highest average rating overall is documentary and history. This is not significantly higher than many other genres, often only being 0.1 points above another, ona scale of 1-10. 
+The genres with the highest average rating overall is documentary and history. This is not significantly higher than many other genres, often only being 0.1 points above another, on a scale of 1-10. Notably, while production volumes are lower, their tight rating distributions suggest more consistent quality compared to mainstream genres.
 
 ```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
 ggridgeIMDBscore <- ggridgesplot(Titles)
@@ -166,11 +166,13 @@ violin_lengthplot(Titles)
 \newpage
 
 # Rating of movies by runtime
-As we can see in the scatterplot, the movies with the highest ratings (above the 7.5 threshold), are of various lengths. However, it remains bundled between 60 and 120 minutes. Preference for movies around 100 minutes remain evidenent. 
+As we can see in the scatterplot, the movies with the highest ratings (above the 7.5 threshold), are of various lengths. However, it remains bundled between 60 and 120 minutes. Preference for movies around 100 minutes remain evidenent. Extremely long (>150 min) or short (<60 min) films rarely achieve top ratings, suggesting viewers prefer substantial but concise narratives.
 ```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
 movie_scatterplot(Titles)
 ```
 
+# Conclusion
+A new service could succeed by curating a specialised library of premium documentaries and international arthouse films (90-110 minutes), filling gaps left by platforms focused on mass-market content. This "quality niche" strategy would attract viewers who are underserved by current streaming services.
 
 
 <!-- # References {-} -->

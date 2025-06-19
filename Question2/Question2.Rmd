@@ -175,39 +175,44 @@ together_studio <- bind_rows(metallica_studio, coldplay_studio)
 
 This is an analysis of two iconic bands with >20-year careers. Firstly, Coldplay (Alternative/Pop Rock, debut: 2000), and secondly Metallica (Heavy Metal/Thrash, debut: 1981). Using Spotify data, we can compare their musical progression, audience engagement, and adaptation to industry trends, filtering only studio recordings for fair comparisons. 
 
-
+\newpage
 # Popularity by album
-
-The popularity of each of the bands are shown in a box-and-whiskers plot, showing the popularity scores per album. 
+A box-and-whisker plot compares the popularity scores of each band's albums, revealing trends across their discographies.
 
 ## Coldplay
+Coldplay has released a wide range of albums over the years. Coldplay's evolving sound over the years is reflected in the varying popularity of their studio and live albums.
+
 ### Overall
 ```{r}
 albumpop_CP <- boxplotpopbyalbum(coldplay)
 albumpop_CP
 ```
-Coldplay is known for its live albums, with the live albums of "Live in Bueonos Aires" and "Live 2012" surpassing albums like "Love in Tokyo" and "Everyday Life" in popularity. 
-
+Coldplay is known for its live albums, with the live albums of "Live in Bueonos Aires" and "Live 2012" surpassing albums like "Love in Tokyo" and "Everyday Life" in popularity.  
 ### Live
+
 ```{r}
 albumpop_CPL <- boxplotpopbyalbum(coldplay_live)
 albumpop_CPL 
 ```
+Live albums consistently rank highly, suggesting stronger fan engagement with concert performances.
 
+\newpage
 ## Metallica
+Metallica's enduring appeal is evident, with remastered editions dominating their most popular works.
 ### Overall
+
 ```{r}
 albumpop_ML <- boxplotpopbyalbum(metallica)
 albumpop_ML
 ```
-For Metallica, the remastered albums gain more traction, as seen by 7 of the top 10 most popular albums being remastered albums. 
-
+Remastered albums claim 7 of the top 10 spots, highlighting their continued relevance and enhanced production value. 
 ### Studio
+
 ```{r}
 albumpop_MLS <- boxplotpopbyalbum(metallica_studio)
 albumpop_MLS
 ```
-
+Classic releases maintain a strong presence, showing a loyal fanbase. Streaming services have made Metallica's music much more accessible. Seeing an steady increase in popularity over time is unsurprising.
 \newpage
 
 # Song popularity
@@ -243,3 +248,5 @@ liveML <- live_timetrend_comp(metallica, metallica_live, artist_name = "Metallic
 liveML
 ```
 
+# Conclusion 
+Both Metallica and Coldplay demonstrate how iconic artists balance staying true to their roots while navigating evolving music trends. Ultimately, their sustained popularity suggests that success lies not in chasing trends, but in blending selective innovation with core artistic identity.

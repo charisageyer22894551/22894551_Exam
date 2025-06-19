@@ -142,7 +142,7 @@ It the rate at which your body burns calories while at rest, performing essentia
 
 # Slide 3: BMR threshold
 This threshold is calculated (differently for males and female). It consists of a metric similar to BMI, where you take a transformed value of your height, weight and activity levels to come to a factor. It is sometimes calculated to see how many calories one should consume to maintain your current weight. 
-
+\newpage
 # Slide 4: Determinants of Health
 Source: @sprintmedical_bmr_2022
 * Age -> older people have slower metabolisms
@@ -160,6 +160,7 @@ g <- stackedbar_BMR(Health_lpm, category_col = "Stress Level")
 cowplot::plot_grid(g, h, ncol = 1)
 ```
 
+\newpage
 
 # Slide 6: LPM results
 Men and women experience different effects. Remember that an LPM measures effects relative to a basline category, which in this case is low stress levels with excellent sleep and no activity. We can see clearly (as clearly as LPM results can be), that excellent sleep is always better, more moderate activity is acceptable and stress levels have varying effects.  
@@ -168,11 +169,12 @@ Men and women experience different effects. Remember that an LPM measures effect
 coefplot <- LPM(Health_lpm)
 coefplot
 ```
-## What's next? 
+
+# What's next? 
 * sleep more
 * exercise less
 * stop stressing about your stress levels!
 This is of course a joke, and data can always be wrangled in a way to fit a nrrative. So the lesson to learn is: DON'T BELIEVE EVERYTHING THAT YOU SEE! Especially not if it comes from an amateur analyst! 
 
-## Greetings
+# Greetings
 Thanks for listening and see you next time. 
