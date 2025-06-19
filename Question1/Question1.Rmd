@@ -155,7 +155,7 @@ The Toy Store wants to know if there are trends in naming conventions. Parents g
 \newpage
 <!-- # Plot 1: Popular names by decade: Girls -->
 # Plot 1
-We observe the popularity of names for oys and girls over time. By looking at the colour-coordinated bubbles, we observe persistence in the naming of very popular names like "Mary" and "James" - the two most popular names overall. 
+We observe the popularity of names for boys and girls over time. By looking at the colour-coordinated bubbles, we observe persistence in the naming of very popular names like "Mary" and "James" - the two most popular names overall. 
 ```{r, fig.align= 'center'}
 
 # apply the top25_plot function
