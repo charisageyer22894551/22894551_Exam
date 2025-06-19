@@ -734,8 +734,11 @@ I realised now that the column names of the countries don't always match, that's
 If I have time I will get back to this! 
 
 ```{r worldmap heatmap }
-install.packages("rnaturalearth")
-install.packages("rnaturalearthdata")
+if(!require("rnaturalearth")) {install.packages("rnaturalearth", repos = "https://cloud.r-project.org/")
+  library("rnaturalearth")}
+if(!require("rnaturalearthdata", quietly = TRUE)) {
+  install.packages("rnaturalearthdata", repos = "https://cloud.r-project.org/")
+  library(rnaturalearthdata)}
 
 library(tidyverse)
 library(rnaturalearth) # For world map data
