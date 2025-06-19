@@ -1,6 +1,5 @@
 Spearman <- function(df, gender_filter = "F", top_n = 25, lag_n = 3) {
 
-
     df_clean <- df %>%
         filter(Gender == gender_filter) %>%
         group_by(year, name) %>%

@@ -31,11 +31,6 @@ library(fmxdat)
 # Load functions from all question projects
 
 list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
-list.files('./22894551_Exam/Question1/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
-list.files('./22894551_Exam/Question2/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
-list.files('./22894551_Exam/Question3/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
-list.files('./22894551_Exam/Question4/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
-list.files('./22894551_Exam/Question5/code', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
 
 # Creation of question folders
 library(Texevier)
@@ -94,15 +89,15 @@ Baby_Names <- Baby_Names %>%
 # add gender & rename name columns
 
 Top_100_Billboard <- Top_100_Billboard %>% rename(name = artist) #the dates is in numeric here, can add year col
-Billboard_MF <- add_gender(df = Top_100_Billboard)
+Billboard_MF <- add_gender(df = Top_100_Billboard) %>% mutate(year = year(date)) 
 
 #Hbo artists
-HBO_MF <- add_gender(HBO_joined)
+HBO_MF <- add_gender(HBO_joined) %>% rename(year = release_year)
 
 #HBO_MF_new <- charadd_gender(HBO_MF)
 
 #now apply to character
-HBO_characters_MF <- HBO_MF %>%  rename(actor_name = name) %>% rename(name = character) %>% rename(year = release_year)
+HBO_characters_MF <- HBO_MF %>%  rename(actor_name = name) %>% rename(name = character) 
 
 
 # drop unnecessary dataframes
@@ -134,7 +129,7 @@ will sort the names in the top 25 order for each decade.
 
 ```{r}
 #check if year is numeric
-str(Baby_Names$Year)
+str(Baby_Names$year)
 
 #create function to add decade column: decade_creator
 #create function to create top25 names with a gender filter: Top25_Names_decade
@@ -208,20 +203,6 @@ functions, so I'm going to continue with the ordering!
 Let's just get the top 25 actors and actresses and the top 25 male and
 female character names.
 
-
-
-<!-- ```{r} -->
-
-<!-- top25_girlscharactersplot <- top25_plot(df = HBO_characters_MF, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F", year_col = release_year) -->
-
-<!-- top25_girlsplot -->
-
-<!-- top25_boycharactersplot <- top25_plot(df = HBO_characters_MF, xaxis_size = 10, xaxis_rows = 2, gender_filter = "M", year_col = release_year) -->
-
-<!-- top25_boysplot -->
-
-<!-- ``` -->
-
 ### Top 25 most popular characters overall
 The setup here I don't like so much, because the big movies' small roles are comiing up. I need to filter that only lead/ supporting roles come up. 
 
@@ -251,6 +232,46 @@ Some of the character names have special characters that need cleaning
 # 
 # popchars
 
+library(rlang)
+get_top_names_in_billboard <- function(df, df_2) {
+    # Get top 10 songs per decade
+    top_songs <- df %>% mutate(
+        decade = 10 * floor(year)/10) %>%
+        mutate(peak_rank = `peak-rank`) %>% 
+        group_by(decade, song, name) %>%
+        summarise(weeks_at_1 = sum(peak_rank == 1), .groups = "drop") %>%
+        group_by(decade) %>%
+        slice_max(weeks_at_1, n = 10) %>%
+        ungroup()
+
+    # Extract all names from both song titles and artist names
+    all_names <- df_2 %>% pull(name) %>% unique()
+
+    # Create regex pattern for name matching
+    name_pattern <- paste0("\\b(", paste(all_names, collapse = "|"), ")\\b")
+
+    # Find matches in song titles or artist names
+    top_songs %>%
+        mutate(
+            matched_names = map2_chr(
+                song, name,
+                ~ str_extract_all(
+                    paste(.x, .y),
+                    regex(name_pattern, ignore_case = TRUE)
+                ) %>%
+                    unlist() %>%
+                    unique() %>%
+                    paste(collapse = ", ")
+            ) %>%
+                filter(matched_names != "") %>%
+                select(decade, song, name, matched_names) %>%
+                arrange(decade)
+        )
+            }
+
+matchesBB <- get_top_names_in_billboard(Billboard_MF, Baby_Names)
+
+str(HBO_MF)
 ```
 
 
@@ -355,6 +376,34 @@ This chunk is not working :( Need to come back to this!
 # 
 # result_boys <- findmatches_and_matchrate(Baby_Names, gender_filter = "M", top_n = 25)
 # print(result_boys$message)
+
+# let's just create a table with some observations we saw from looking at the data! 
+library(xtable)
+
+# Create the data
+name_table_data <- data.frame(
+  Name = c("Donna", "Dorothy", "Diane", "Barbara", "Elizabeth"),
+  Type = c("Song name", "Character", "Song", "Actress", "Public figure"),
+  Example = c(
+    '"Donna" - Ritchie Valens',
+    'Dorothy Gale - The Wizard of Oz',
+    '"Jack and Diane" - John Mellencamp',
+    'Barbra Streisand', 
+    'Queen Elizabeth'
+  )
+)
+
+# Create xtable
+name_xtable <- xtable(name_table_data, 
+                     caption = "Names in Music, Film and Culture \\label{tab:names}")
+
+# Print with formatting
+print(name_xtable,
+      include.rownames = FALSE,
+      floating = TRUE,
+      table.placement = 'H',
+      caption.placement = 'top',
+      comment = FALSE)
 ```
 
 ## SPEARMAN CORRELATION PLOTS
@@ -367,6 +416,7 @@ periods popularity of name usage for girls and boys.
 
 ```{r}
 Spearman(Baby_Names)
+spearman_full(Baby_Names)
 ```
 
 I want to see them together/ next to each other
@@ -381,6 +431,7 @@ spearman_boys <- Spearman(df = Baby_Names,  gender_filter = "M")
 # see side by side
 cowplot::plot_grid(spearman_girls, spearman_boys, ncol = 1)
 ```
+
 
 # Question 2: MUSIC TASTE
 
@@ -666,17 +717,6 @@ library(rnaturalearthdata)
 
 heatmap_billions(Billions)
 ```
-
-
-
-
-
-
-
-
-
-
-
 
 
 
