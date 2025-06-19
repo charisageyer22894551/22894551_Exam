@@ -46,7 +46,7 @@ top25_increaseplot <- function(df, xaxis_size = 10, xaxis_rows = 2, gender_filte
             aes(label = name), colour = "black", size = 3, vjust = 0, check_overlap = TRUE) +
 
         scale_size_continuous(range = c(1, 10), name = "% Change") +
-        scale_colour_manual(values = c("Top 3" = "firebrick")) +
+        scale_colour_manual(values = c("Top 3" = "yellow")) +
         coord_flip() +
         theme_bw() +
         labs(title = glue::glue("Top 25 {gender_label} Names – % Increase per Decade"),

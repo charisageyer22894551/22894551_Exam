@@ -175,6 +175,22 @@ top25_increaseplot(Baby_Names)
 top25_increaseplot(Baby_Names, gender_filter =)
 ```
 
+
+## Most popular names per decade
+
+Since there are so many names and that becomes cluttered, I opted to
+plot this with only the top 3 names per decade.
+
+```{r}
+top3namesuptake <- get_top3_increasing_names(Baby_Names)
+top3namesuptake
+
+top3namesuptakeboys <- get_top3_increasing_names(Baby_Names, gender_filter = "M")
+top3namesuptakeboys
+```
+
+
+
 ## HBO - movies and TV
 Now, since I want to compare the correlation for girls and boys
 separately, I need to infer the gender of the HBO and Billboard lists -
@@ -191,6 +207,8 @@ functions, so I'm going to continue with the ordering!
 
 Let's just get the top 25 actors and actresses and the top 25 male and
 female character names.
+
+
 
 <!-- ```{r} -->
 
@@ -235,81 +253,8 @@ Some of the character names have special characters that need cleaning
 
 ```
 
-Now let's do it by decade! 
 
-### Popularity per decade
-```{r}
-library(forcats)
-# not using this now since the previous is broken
 
-# group_by(decade)
-
-```
-
-Since there are so many names and that becomes cluttered, I opted to
-plot this with only the top 3/10 names per decade.
-
-<!-- # ```{r} -->
-
-<!-- # library(stringr) -->
-
-<!-- #  -->
-
-<!-- # Top10_Cleaned <- Top25_Characters_by_Decade %>% -->
-
-<!-- #   mutate( -->
-
-<!-- #     character = str_remove(character, "\\s*\\(uncredited\\)"),        # remove clutter -->
-
-<!-- #     character = str_trunc(character, 40),                             # truncate long labels -->
-
-<!-- #     Gender = factor(Gender, levels = c("F", "M"))                     # consistent ordering -->
-
-<!-- #   ) %>% -->
-
-<!-- #   group_by(decade, Gender) %>% -->
-
-<!-- #   slice_max(order_by = avg_score, n = 10, with_ties = FALSE) %>% -->
-
-<!-- #   ungroup() %>% -->
-
-<!-- #   arrange(Gender, desc(avg_score)) %>% -->
-
-<!-- #   mutate(character_ordered = fct_inorder(character)) -->
-
-<!-- #  -->
-
-<!-- # ggplot(Top10_Cleaned, aes(x = avg_score, y = character_ordered, colour = Gender)) + -->
-
-<!-- #   geom_point(size = 3, alpha = 0.8) + -->
-
-<!-- #   facet_wrap(~decade, scales = "free_y") + -->
-
-<!-- #   theme_minimal(base_size = 11) + -->
-
-<!-- #   labs( -->
-
-<!-- #     title = "Top 10 HBO Characters by Gender and TMDB Score per Decade", -->
-
-<!-- #     subtitle = "Ordered by Gender first, then TMDB Score (highest to lowest)", -->
-
-<!-- #     x = "Avg TMDB Score", y = "Character" -->
-
-<!-- #   ) + -->
-
-<!-- #   theme( -->
-
-<!-- #     axis.text.y = element_text(size = 7), -->
-
-<!-- #     strip.text = element_text(size = 10), -->
-
-<!-- #     legend.position = "top" -->
-
-<!-- #   ) + -->
-
-<!-- #   scale_colour_manual(values = c("F" = "#E377C2", "M" = "#1F77B4")) -->
-
-<!-- <!-- ``` -->
 
 This ALSO looks incredibly janky! I'm going to try to make it a bit more
 neat by grouping by gender. I'm also only going to keep names that are
@@ -370,6 +315,20 @@ found in the baby_names list.
 I will see if I get to comparing these! It can be interesting to filter
 the songs to only those containing a name that appears in the babyname
 list.
+```{r}
+library(dplyr)
+library(lubridate)
+
+billboard_top10 <- Billboard_MF %>%
+  mutate(
+    rank = as.numeric(rank),        # Convert rank to numeric
+    year = year(date),              # Extract year from date
+    decade = floor(year / 10) * 10  # Calculate decade
+  ) %>%
+  filter(rank >= 1, rank <= 10) %>% 
+     distinct(song, .keep_all = TRUE)
+```
+
 
 ## COMPARISON OF MATCHES
 
@@ -411,7 +370,7 @@ Spearman(Baby_Names)
 ```
 
 I want to see them together/ next to each other
-
+At first I did it separately, but then i decided I want them on the same plot - the function was so specified that I decided to break it up into two parts, and then I could apply each part separately!
 ```{r}
 spearman_girls <- Spearman(df = Baby_Names, gender_filter = "F")
 # spearman_girls

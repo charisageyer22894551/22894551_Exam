@@ -3,7 +3,7 @@
 # Remove comments and add values where applicable.
 # The descriptions below should be self-explanatory
 
-title: "22894551 Question 2"
+title: "22894551 - Question 2 - Play that Song"
 #subtitle: "This will appear as Right Header"
 
 documentclass: "elsarticle"
@@ -141,8 +141,8 @@ spotify <- spotify %>% rename(song = name)
 # remove_special characters
 glimpse(metallica)
 
-metallica <- remove_special(metallica, c(album, song))
-coldplay <- remove_special(coldplay, c(album, song))
+metallica <- remove_special(metallica, album)
+coldplay <- remove_special(coldplay, album)
 
 # filter only for studio albums!
 
@@ -215,7 +215,6 @@ Now let's look deeper into the popularity of the songs within each album.
 ```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
 songspop <- songsinalbum_pop(together_studio)
 songspop
-
 ```
 "Parachutes" and "A Rush of Blood to the Head" are identified as Coldplay's two most popular albums of all time. Within those two albums, all songs are popular. Compared to "Mylo Xyoto", where many songs are popular, but some are unpopular - bumping the album to a lower ranking overall. This shows the importance of song popularity in determining album popularity. 
 

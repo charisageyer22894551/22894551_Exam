@@ -7,7 +7,7 @@ songsinalbum_pop<-function(df){
         ggplot() +
         aes(x = album, y = popularity, colour = artist, fill = artist) + # each band has own colour
         geom_violin() +
-        geom_jitter(aes(size = tempo), width = 0.1, alpha = 0.2) + # Map size = tempo
+        geom_jitter(aes(size = energy), width = 0.1, alpha = 0.2) + # Map size = tempo
         coord_flip() +
         theme_bw() +
         theme(legend.position = "right") +
@@ -16,7 +16,7 @@ songsinalbum_pop<-function(df){
             subtitle = "Coldplay and Metallica",
             colour = "Artist",
             fill = "Artist",
-            size = "Tempo of Song"
+            size = "Energy"
         ) +
         xlab("") +
         ylab("Popularity Score")
