@@ -496,9 +496,28 @@ spotify <- spotify %>% rename(song = name)
 
 #creaated a function that works
 metallica <- remove_special(metallica, album)
-
 coldplay <- remove_special(coldplay, album)
 
+# remove_special characters
+glimpse(metallica)
+# filter only for studio albums!
+
+metallica_studio <- metallica %>%
+  filter(!grepl("live|Live|LIVE|Remastered|Remaster|Deluxe", album, ignore.case = TRUE))
+coldplay_studio <- coldplay %>% 
+    filter(!grepl("live|Live|LIVE|Remastered|Demo|Deluxe", album, ignore.case = TRUE))
+
+metallica_live <- metallica %>% 
+    filter(grepl("live|Live|LIVE", album, ignore.case = T))
+
+coldplay_live <- coldplay %>% 
+    filter(grepl("live|Live|LIVE", album, ignore.case = T))
+
+# create a list of spotify songs that reached the top 100 on billboard
+spotify_top100 <- top100(spotify)
+
+# create one dataframe wit coldplay and metallica studio albums together
+together_studio <- bind_rows(metallica_studio, coldplay_studio)
 ```
 
 To have a good comparison group for trends in popular music, I created a Spotify list that only contains songs that were also on the Billboard Top 100. I created the function called top100 for this. 
@@ -535,11 +554,10 @@ albumpop_ML
 For Metallica, the remastered albums gain more traction, as seen by 7 of the top 10 most popular albums being remastered albums. 
 
 ### Studio
-```{rstudio album Met}
+```{r studio album Met}
 albumpop_MLS <- boxplotpopbyalbum(metallica_studio)
 albumpop_MLS
 ```
-
 
 ## Violin plots for song popularity within each album
  I saw on R graph gallery there are some nice new plots! Yay! So I can pick some for the rest of the analysis. 
@@ -555,7 +573,7 @@ songspop <- songsinalbum_pop(together_studio)
 WIll be able to see over the years what type of music they started to do 
 At first I tried this ggridges, but since there are so many years it is not great. I think I'll rather use the trends by components.
 
-```{r ridgeplots songpopularity?}
+```{r ridgeplots songpopularity, include = FALSE, warning = FALSE, message = FALSE}
 ridgeplots(spotify, danceability)
 ```
 
@@ -616,10 +634,10 @@ Titles <- clean_production_countries(Titles)
 
 First i created a top10 countries function on its own, but i rather combined it with the plot function to become top10countires_plot
 
-## Plot 1 
-```{r top10 plots}
-top10_plot <- top10countries_plot(Titles)
-top10_plot
+## Plot 1 : Top contries
+```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
+top10countries_plot <- top10_plot(Titles, "production_countries")
+top10countries_plot
 ```
 
 ## Plot 2 : Genre popularity
