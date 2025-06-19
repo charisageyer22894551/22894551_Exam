@@ -18,7 +18,7 @@ top_group <- df %>%
          geom_text(aes(label = total_movies), hjust = -0.1, size = 3) +  # Add counts
          coord_flip() +  # Horizontal bars
          scale_fill_gradient(low = "lightblue", high = "darkblue") +  # Color gradient
-         labs(title = "Top 10 Countries by Movie Production (Movies only)",
+         labs(title = glue::glue("Top 10 {col_name} by Movie Production (Movies only)"),
               x = "",
               y = "Number of Movies") +
          theme_minimal() +
