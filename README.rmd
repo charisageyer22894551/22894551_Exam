@@ -11,7 +11,7 @@ This README will take you through my DATA Science 871 exam. All
 questions, data wrangling and analyses will be outlined in this
 document.
 
-```{r}
+```{r setup}
 
 rm(list = ls()) # Clean your environment:
 gc() # garbage collection - It can be useful to call gc after a large object has been removed, as this may prompt R to return memory to the operating system.
@@ -56,7 +56,7 @@ library(Texevier)
 
 Step 1: uploading the data, view the format with view(Baby\_/Names)
 
-```{r}
+```{r setup q1}
 Baby_Names <- read_rds("./data/PracData25/US_Baby_names/Baby_Names_By_US_State.rds")
 Top_100_Billboard <- read_rds("./data/PracData25/US_Baby_names/charts.rds")
 HBO_titles <- read_rds("./data/PracData25/US_Baby_names/HBO_titles.rds")
@@ -78,7 +78,7 @@ and "name" columns, so I decided to rather change the functions back to
 using "name" and "year" for simplicity and to then rename the columns in
 each dataset. This felt more simple!
 
-```{r}
+```{r tidy up q1 and rename}
 
 #tidy up the column names for ease of use: 
 Baby_Names <- Baby_Names %>%
@@ -127,7 +127,7 @@ artists in each year
 Since I want to work with decades: I need to create some functions that
 will sort the names in the top 25 order for each decade.
 
-```{r}
+```{r check year type}
 #check if year is numeric
 str(Baby_Names$year)
 
@@ -136,7 +136,7 @@ str(Baby_Names$year)
 ```
 
 It works better if I combine these two functions into the Top25_Names_decade function!
-```{r}
+```{r top25 by decade}
 # create top25 lists with the decade_Creator function and arrange by popularity
 # just checking that it works: 
 
@@ -148,7 +148,7 @@ I first created a function only for one of the genders and then amended
 it to be more generic with a gender_filter so that we can use it throughout.
 
 ### Top25_plot
-```{r}
+```{r top25 plot}
 # I loaded my plot_orderset function
 
 top25_girlsplot <- top25_plot(df = Baby_Names, xaxis_size = 10, xaxis_rows = 2, gender_filter = "F")
@@ -165,7 +165,7 @@ that
 
 ### Increase year-on-year
 Create function for the increase year-on-year by decade! Now I can see the surges. I also added the function that it shows the top 3 names each decade and makes them a different colour. 
-```{r}
+```{r increase year on year}
 top25_increaseplot(Baby_Names)
 top25_increaseplot(Baby_Names, gender_filter =)
 ```
@@ -176,7 +176,7 @@ top25_increaseplot(Baby_Names, gender_filter =)
 Since there are so many names and that becomes cluttered, I opted to
 plot this with only the top 3 names per decade.
 
-```{r}
+```{r top3 names per decade}
 top3namesuptake <- get_top3_increasing_names(Baby_Names)
 top3namesuptake
 
@@ -212,6 +212,8 @@ I will now revisit my definition of HBO_characters_MF.
 I also want some first names but it might fall away if I do first word. 
 Some of the character names have special characters that need cleaning
 
+# I never got time to get this to work :( 
+
 ```{r, include = FALSE}
 # 
 # Top25_Characters_by_TMDB <- HBO_characters_MF %>%
@@ -232,46 +234,48 @@ Some of the character names have special characters that need cleaning
 # 
 # popchars
 
-library(rlang)
-get_top_names_in_billboard <- function(df, df_2) {
-    # Get top 10 songs per decade
-    top_songs <- df %>% mutate(
-        decade = 10 * floor(year)/10) %>%
-        mutate(peak_rank = `peak-rank`) %>% 
-        group_by(decade, song, name) %>%
-        summarise(weeks_at_1 = sum(peak_rank == 1), .groups = "drop") %>%
-        group_by(decade) %>%
-        slice_max(weeks_at_1, n = 10) %>%
-        ungroup()
+# this never worked
 
-    # Extract all names from both song titles and artist names
-    all_names <- df_2 %>% pull(name) %>% unique()
-
-    # Create regex pattern for name matching
-    name_pattern <- paste0("\\b(", paste(all_names, collapse = "|"), ")\\b")
-
-    # Find matches in song titles or artist names
-    top_songs %>%
-        mutate(
-            matched_names = map2_chr(
-                song, name,
-                ~ str_extract_all(
-                    paste(.x, .y),
-                    regex(name_pattern, ignore_case = TRUE)
-                ) %>%
-                    unlist() %>%
-                    unique() %>%
-                    paste(collapse = ", ")
-            ) %>%
-                filter(matched_names != "") %>%
-                select(decade, song, name, matched_names) %>%
-                arrange(decade)
-        )
-            }
-
-matchesBB <- get_top_names_in_billboard(Billboard_MF, Baby_Names)
-
-str(HBO_MF)
+# library(rlang)
+# get_top_names_in_billboard <- function(df, df_2) {
+#     # Get top 10 songs per decade
+#     top_songs <- df %>% mutate(
+#         decade = 10 * floor(year)/10) %>%
+#         mutate(peak_rank = `peak-rank`) %>% 
+#         group_by(decade, song, name) %>%
+#         summarise(weeks_at_1 = sum(peak_rank == 1), .groups = "drop") %>%
+#         group_by(decade) %>%
+#         slice_max(weeks_at_1, n = 10) %>%
+#         ungroup()
+# 
+#     # Extract all names from both song titles and artist names
+#     all_names <- df_2 %>% pull(name) %>% unique()
+# 
+#     # Create regex pattern for name matching
+#     name_pattern <- paste0("\\b(", paste(all_names, collapse = "|"), ")\\b")
+# 
+#     # Find matches in song titles or artist names
+#     top_songs %>%
+#         mutate(
+#             matched_names = map2_chr(
+#                 song, name,
+#                 ~ str_extract_all(
+#                     paste(.x, .y),
+#                     regex(name_pattern, ignore_case = TRUE)
+#                 ) %>%
+#                     unlist() %>%
+#                     unique() %>%
+#                     paste(collapse = ", ")
+#             ) %>%
+#                 filter(matched_names != "") %>%
+#                 select(decade, song, name, matched_names) %>%
+#                 arrange(decade)
+#         )
+#             }
+# 
+# matchesBB <- get_top_names_in_billboard(Billboard_MF, Baby_Names)
+# 
+# str(HBO_MF)
 ```
 
 
@@ -336,7 +340,7 @@ found in the baby_names list.
 I will see if I get to comparing these! It can be interesting to filter
 the songs to only those containing a name that appears in the babyname
 list.
-```{r}
+```{r billboard top10}
 library(dplyr)
 library(lubridate)
 
@@ -370,7 +374,7 @@ function: findmatches -\> not working so well function: newfindmatches
 
 This chunk is not working :( Need to come back to this!
 
-```{r}
+```{r table with name references}
 # result_girls <- findmatches_and_matchrate(Baby_Names, top_n = 25)
 # print(result_girls$message)
 # 
@@ -414,14 +418,14 @@ names stay top names over time (year-on-year)
 What is the correlation between this period and future periods/ past
 periods popularity of name usage for girls and boys.
 
-```{r}
+```{r spearman}
 Spearman(Baby_Names)
 spearman_full(Baby_Names)
 ```
 
 I want to see them together/ next to each other
 At first I did it separately, but then i decided I want them on the same plot - the function was so specified that I decided to break it up into two parts, and then I could apply each part separately!
-```{r}
+```{r spearman separate not used}
 spearman_girls <- Spearman(df = Baby_Names, gender_filter = "F")
 # spearman_girls
 
@@ -451,7 +455,7 @@ Get a nice comparison song by Coldplay
 
 ### Data cleaning! 
 I had trouble with removing the special character in some of Metallica's album names with gsub, but it worked better with iconv ! So I created a function to use for later also!  
-```{r}
+```{r setup q2}
 
 # upload data
 coldplay <- read_csv("./data/PracData25/Coldplay_vs_Metallica/Coldplay.csv")
@@ -479,7 +483,7 @@ spotify <- spotify %>% rename(song = name)
 # billboard is fine
 
 #remove the special characters
-
+# these options didnt work
 # metallica %>% 
 #       mutate(album = gsub("�", "", album))
 #         mutate(album = gsub("\uFFFD", "", album, fixed = TRUE))
@@ -487,17 +491,18 @@ spotify <- spotify %>% rename(song = name)
 # metallica %>%
 #   mutate(album = gsub("[^[:ascii:]]", "", album))
 
-metallica %>%
-  mutate(album = iconv(album, from = "UTF-8", to = "ASCII", sub = ""))
+# metallica %>%
+#   mutate(album = iconv(album, from = "UTF-8", to = "ASCII", sub = ""))
 
-metallica <- remove_special(metallica, col_name = c(song, album))
+#creaated a function that works
+metallica <- remove_special(metallica, album)
 
-coldplay <- remove_special(coldplay, col_name = c(song, album))
+coldplay <- remove_special(coldplay, album)
 
 ```
 
 To have a good comparison group for trends in popular music, I created a Spotify list that only contains songs that were also on the Billboard Top 100. I created the function called top100 for this. 
-```{r}
+```{r top100 spotify}
 spotify_top100 <- top100(spotify)
 ```
 
@@ -509,28 +514,28 @@ The popularity of each of the bands are shown in a box-and-whiskers plot, showin
 
 ## Coldplay
 ### Overall
-```{r}
+```{r album CP}
 albumpop_CP <- boxplotpopbyalbum(coldplay)
 albumpop_CP
 ```
 Coldplay is known for its live albums, with the live albums of "Live in Bueonos Aires" and "Live 2012" surpassing albums like "Love in Tokyo" and "Everyday Life" in popularity. 
 
 ### Live
-```{r}
+```{r live album CP}
 albumpop_CPL <- boxplotpopbyalbum(coldplay_live)
 albumpop_CPL 
 ```
 
 ## Metallica
 ### Overall
-```{r}
+```{r album Met}
 albumpop_ML <- boxplotpopbyalbum(metallica)
 albumpop_ML
 ```
 For Metallica, the remastered albums gain more traction, as seen by 7 of the top 10 most popular albums being remastered albums. 
 
 ### Studio
-```{r}
+```{rstudio album Met}
 albumpop_MLS <- boxplotpopbyalbum(metallica_studio)
 albumpop_MLS
 ```
@@ -550,8 +555,8 @@ songspop <- songsinalbum_pop(together_studio)
 WIll be able to see over the years what type of music they started to do 
 At first I tried this ggridges, but since there are so many years it is not great. I think I'll rather use the trends by components.
 
-```{r}
-ridgeplots(spotify, tempo)
+```{r ridgeplots songpopularity?}
+ridgeplots(spotify, danceability)
 ```
 
 Now I can compare the trends for both bands to popular spotify songs! 
@@ -562,7 +567,7 @@ I see now that the spotify timeframe is not the same as coldplay. Let's adjust S
 ## Timetrends
 
 Now I can do this for different components, whichever suits the band best.
-```{r}
+```{r timetrends}
 timetrend_CP_dance<- timetrend_comp(df = coldplay_studio, artist = "Coldplay", variable = "danceability")
 library(glue)
 timetrend_CP_dance
@@ -572,7 +577,7 @@ timetrend_CP_dance
  
  Since I already created a live dataframe and a studio dataframe for ecah, I can just use that as the "comparison group" as I had spotify earlier. I just adusted the function a little and created a new one with the right dataframe references, because spotify was coded into the function earlier. 
  
-```{r}
+```{r live energy plots}
 # Live vs Studio albums
 #We can see that energy trends are much lower in Live albums, for both Coldplay and Metallica, but especially for Metallica. 
 liveCP <- live_timetrend_comp(coldplay, coldplay_live, artist_name = "Coldplay Studio", compare_name = "Live Albums", variable = "energy")
@@ -591,10 +596,10 @@ Load the data:
 
 ## upload data
 
-```{r}
+```{r q3 setup}
 Titles <- read_rds("./Question3/data/netflix/titles.rds")
 Credits <- read_rds("./Question3/data/netflix/credits.rds")
-Movie_Info <- read_csv(".Question3/data/netflix/netflix_movies.csv")
+Movie_Info <- read_csv("./Question3/data/netflix/netflix_movies.csv")
 ```
 ## Data cleaning!
 
@@ -604,7 +609,7 @@ I cleaned the genres and production countries columns -> now I'm going to look a
 
 I think I will be able to create a ridgesplot here finally! yay!
 
-```{r}
+```{r q3 cleaning}
 Titles <- clean_genres_titles(Titles)
 Titles <- clean_production_countries(Titles)
 ```
@@ -612,26 +617,25 @@ Titles <- clean_production_countries(Titles)
 First i created a top10 countries function on its own, but i rather combined it with the plot function to become top10countires_plot
 
 ## Plot 1 
-```{r}
+```{r top10 plots}
 top10_plot <- top10countries_plot(Titles)
 top10_plot
 ```
 
-## Plot 2
-Now I will adjust this to find the most popular genres, based on the total movie count. I can just adjust the function to be genres in stead of countries! 
-
-```{r}
-
+## Plot 2 : Genre popularity
+The most common movie genres by movie production count are drama and comedy, followed by thriller and action. This says nothing about the quality of movies or if th  movies were popular and successful. 
+```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
+top10genres_plot <- top10_plot(Titles, "genres")
+top10genres_plot
 ```
 
-## Ridge plots
+## Genre ratings of top countries
+ ###Ridge plots
 I will adjust the ridgesplot function I created for question 2 but didn't use here! 
 I now created ggridgesplot. I added the mean score to the plot, added the average mean point. I changed the display around a bit but it actually looks best if I just keep the mean point small and then add the text on top of that. 
-
-## Genre ratings of top countries
 The genres with the highest average rating overall is documentary and history. This is not significantly higher than many other genres, often only being 0.1 points above another, ona scale of 1-10. 
 
-```{r}
+```{r ggridges for IMDB scores}
 ggridgeIMDBscore <- ggridgesplot(Titles)
 ggridgeIMDBscore
 ```
@@ -641,11 +645,13 @@ Here i can use the violin plot I used earlier for the song popularity!
 I also want to do the ggstream somewhere :) 
 The IMDB scores were a good idea but they are looking a bit ugly. So I removed the jitter_plot! 
 
-```{r}
+```{r length by popularity}
 violin_lengthplot(Titles)
 ```
 
-```{r}
+## Rating of movies by runtime
+As we can see in the scatterplot, the movies with the highest ratings (above the 7.5 threshold), are of various lengths. However, it remains bundled between 60 and 120 minutes. 
+```{r movie ratings by movie length scatter}
 movie_scatterplot(Titles)
 ```
 
@@ -660,19 +666,24 @@ joh that was a struggle! I first tried to do all the columns at once with c(.. .
 also when you use janitor to make it snake case it makes everything characters, so I just changed it back to the right numeric/ integer afterwards. 
 
 I also create decade and a self_made
+```{r bespoke and data upload}
+file_path = "./data/Billions/billionaires.csv"
+
+Billions <- "./data/Billions/billionaires.csv" %>% bespoke_function()
+```
 
 2. main points
 ## Countries of generational wealth
 
 I created a function to plot the proportion of self-made vs inherited billionaires -> propbills
-```{r}
+```{r US billionaires}
 USpropbills <- propbills(Billions, location_region = "North America")
 #i tried to do all other than US: 
 #notUSpropbills <- Billions %>% filter(location_region != "North America") %>% propbills()
 ```
 
 but that didn't work. So I ended up just creating a little extra function to look at the non-US!
-```{r}
+```{r non US billionaires}
 # all other than us: 
 nonUSpropbills <- Billions %>% filter(location_region != "North America") %>% propbills_noregion()
 cowplot::plot_grid(USpropbills, nonUSpropbills)
@@ -683,7 +694,7 @@ cowplot::plot_grid(USpropbills, nonUSpropbills)
 ## Industries of self-made millionaires in the 90s
 I made a function for this to do a scatterplot with a trendline, but it looks very bad, so i am opting for a ggridges again - i can adapt my q3 ggridges function to work here! 
 I also decided to include the financial sector, as it looked prominent when I had a look at the numbers. 
-```{r}
+```{r sectoral}
 # just having a look at the numbers
 Billions %>% filter(self_made == "TRUE") %>% group_by(industry, year) %>% count()
 
@@ -691,12 +702,10 @@ Billions %>% filter(self_made == "TRUE") %>% group_by(industry, year) %>% count(
 billions_sectors90s(Billions)
 ```
 
-
-
 ## Sectoral analysis
 software vs consumer sector by region (based on country GDP)
 
-```{r}
+```{r by sector ggrides}
 library(ggridges)
 ggridgesbillions(Billions)
 ```
@@ -706,7 +715,7 @@ I got the map from the rnaturalearth package that is referenced on r graph galle
 I realised now that the column names of the countries don't always match, that's why the distrib is different.
 If I have time I will get back to this! 
 
-```{r}
+```{r worldmap heatmap }
 install.packages("rnaturalearth")
 install.packages("rnaturalearthdata")
 
@@ -724,15 +733,15 @@ heatmap_billions(Billions)
 a short report on health
 
 Let's set up: 
-```{r}
+```{r q5 setup}
 library(readr)
 library(tidyverse)
 Health <- "./data/PracData25/Health/HealthCare.csv" %>% read_csv()
 ```
-```{r}
 
-```
+### Creation of POWERPOINT SLIDES
 
+I created another RMD in the project, with the output "powerpoint_presentation". I also added a template (blank) to the question folder, so that I could apply a pretty template. Then I porceeded to create the slides with the ## ## slide distinction. 
 
 ## What is BMR? 
 
@@ -743,24 +752,24 @@ definition: Basal metabolic rate is the speed at which your body performs basic 
 
 ## Normal thresholds
 
-
 ```{r fig.cap="BMR thresholds", out.width="70%", echo=FALSE}
 knitr::include_graphics("./Question5/figures/Basal_Metabolic_Rate_Ideal_Values.png")
-
 ```
 
-```{r}
+I checked for the max age, such to decide on an appropriate threshold
+```{r max age check}
 Health %>% group_by(Gender) %>% summarize(max_age = max(Age, na.rm = TRUE))
 ```
 Since both men and women have a max age of below 60, we can say the threshold for a healthy BMR is 37.5 - 39.5 for men and 35 - 37 for women. I will create a binary variable "Healthy_BMR" and do an LPM style regression on it with the explanatory variables given in the dataframe (practical ones: sleep, exercise, stress). I will run 2 separate regressions for men and women. 
 
-I realise now that there is no height specification so I can't actually calculate the healthy BMR. I will go on assuming the global average height just to be able to do the analysis. 
+I realise now that there is no height specification so I can't actually calculate the healthy BMR.
 
+Solution: Use factor of calories/kg.
 
 ## Regression: LPM 
 
 Create the binary vars
-```{r}
+```{r create threshold}
 # For females (35 < BMR < 37)
 female_data <- Health %>%
   filter(Gender == "F") %>%
@@ -768,10 +777,10 @@ female_data <- Health %>%
 ```
 
 ## Mifflin-St Jeor 
-A healthy BMR is assumed at the threshold of BMR calories/Weight to be between 25 and 33. It's actually 35, but there wasn't much of a distinction, so just to tell a story I changed it up a bit. 
+A healthy BMR is assumed at the threshold of BMR calories/Weight to be between 25 and 33. It's actually 35, but since the ages are a bit younger, the threshold should be a bit lower. 
 
 I created a function to add a healthy threshold for BMR score.  
-```{r}
+```{r stacked bars for who is healthy}
 library(tidyverse)
      
  Health_lpm <- thresholdBMR(Health)
@@ -782,11 +791,23 @@ library(tidyverse)
 cowplot::plot_grid(g, h, ncol = 1)
 
 ```
+## Weight distribtions
 
-```{r}
+I decided to leave this one out since the weights are inputs in the factor for being healthy so it is circular reasoning. 
 
-Health %>% healthy_bmr = ifelse(`BMR (Calories)` / `Current Weight (lbs)`*2.2 > 25 &
-                `BMR (Calories)` / `Current Weight (lbs)`*2.2 < 33, 1, 0)
+```{r plotting weight distributions }
+
+
+# Health <- Health %>% healthy_bmr = ifelse(`BMR (Calories)` / `Current Weight (lbs)`*2.2 > 25 &
+#                 `BMR (Calories)` / `Current Weight (lbs)`*2.2 < 33, 1, 0)
+
+
+Health$healthy_bmr <- ifelse(
+  Health$`BMR (Calories)` / Health$`Current Weight (lbs)` * 2.2 > 25 &
+  Health$`BMR (Calories)` / Health$`Current Weight (lbs)` * 2.2 < 33,
+  1, 0
+)
+
 
 Health_lpm %>%
   ggplot(aes(x = as.factor(healthy_bmr), y = `Current Weight (lbs)`, fill = as.factor(healthy_bmr))) +
@@ -810,12 +831,17 @@ Health %>%
 ```
 
 ## Statistical Analysis: Women vs Men
+ Create the coefficientsplot from the factor loadings, that I got from running the LPM. 
+ The categorical variables don't show up so nicely, but at least they are there. 
+ 
+ ! if there is time, change the reference categories toe the "worst" of each category rather. 
  
 ```{r}
 coefplot <- LPM(Health_lpm)
 coefplot
 ```
 
+{end}
 
 
   
