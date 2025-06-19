@@ -131,6 +131,7 @@ Titles <- clean_production_countries(Titles)
 # Introduction 
 Is there a market for another streaming service? If there is, the content included in its library must be particularly enticing. In an industry that is becoming more and more saturated - trends in preferences and production need to be analysed. 
 
+\newpage
 
 # Top production countries
 The United States, India and Great Britain produce the highest amount of movies, based on the Titles data frame. This makes sense, as Hollywood, Bollywood and BBC are three of the largest production areas in the world. 

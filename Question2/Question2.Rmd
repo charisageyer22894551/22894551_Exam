@@ -188,6 +188,9 @@ albumpop_CP <- boxplotpopbyalbum(coldplay)
 albumpop_CP
 ```
 Coldplay is known for its live albums, with the live albums of "Live in Bueonos Aires" and "Live 2012" surpassing albums like "Love in Tokyo" and "Everyday Life" in popularity.  
+
+\newpage 
+
 ### Live
 
 ```{r}
@@ -199,6 +202,7 @@ Live albums consistently rank highly, suggesting stronger fan engagement with co
 \newpage
 ## Metallica
 Metallica's enduring appeal is evident, with remastered editions dominating their most popular works.
+
 ### Overall
 
 ```{r}
@@ -206,6 +210,9 @@ albumpop_ML <- boxplotpopbyalbum(metallica)
 albumpop_ML
 ```
 Remastered albums claim 7 of the top 10 spots, highlighting their continued relevance and enhanced production value. 
+
+\newpage
+
 ### Studio
 
 ```{r}
@@ -213,9 +220,11 @@ albumpop_MLS <- boxplotpopbyalbum(metallica_studio)
 albumpop_MLS
 ```
 Classic releases maintain a strong presence, showing a loyal fanbase. Streaming services have made Metallica's music much more accessible. Seeing an steady increase in popularity over time is unsurprising.
+
 \newpage
 
 # Song popularity
+
 Now let's look deeper into the popularity of the songs within each album. 
 ```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
 songspop <- songsinalbum_pop(together_studio)
@@ -226,12 +235,14 @@ songspop
 \newpage
 
 # Timetrends in music style
+
 To look deeper into the longevity of these popular bands, we can consider the development of music styles over time. By reviewing the time trends of components of their music compared to that of Spotify (a proxy for global music trends), we can uncover whether the artists changed their style to meet global trends. Metallica, known as a loud band, remains louder than the global trend, up until about 2015, maintaining their signature style. 
 ```{r}
 timetrend_ML_loudness <- timetrend_comp(df = metallica_studio, artist = "Metallica", variable = "loudness", min_year = 1990)
 timetrend_ML_loudness
 ```
 Coldplay starts following the global danceability trends, but returns to their calmer style over time. 
+
 ```{r}
 timetrend_CP_dance <- timetrend_comp(df = coldplay_studio, artist = "Coldplay", variable = "danceability", min_year = 2000)
 timetrend_CP_dance
@@ -239,6 +250,7 @@ timetrend_CP_dance
 
 \newpage
 # Live vs Studio albums
+
 We can see that energy trends are much lower in Live albums, for both Coldplay and Metallica, but especially for Metallica. 
 ```{r fig.align = 'center', fig.pos = "H", out.width = "80%"}
 liveCP <- live_timetrend_comp(coldplay, coldplay_live, artist_name = "Coldplay Studio", compare_name = "Live Albums", variable = "energy")
@@ -249,4 +261,5 @@ liveML
 ```
 
 # Conclusion 
+
 Both Metallica and Coldplay demonstrate how iconic artists balance staying true to their roots while navigating evolving music trends. Ultimately, their sustained popularity suggests that success lies not in chasing trends, but in blending selective innovation with core artistic identity.

@@ -153,8 +153,8 @@ rm(Top_100_Billboard, HBO_credits, HBO_joined, HBO_titles)
 # Introduction \label{Introduction}
 The Toy Store wants to know if there are trends in naming conventions. Parents get influenced by the media, tradition and other unknown factors. If trends are persistent, the Toy Store can rely on trends to cater their toy names to. 
 \newpage
-<!-- # Plot 1: Popular names by decade: Girls -->
-# Plot 1
+
+# Plot 1: Most popular names over the years
 We observe the popularity of names for boys and girls over time. By looking at the colour-coordinated bubbles, we observe persistence in the naming of very popular names like "Mary" and "James" - the two most popular names overall. 
 ```{r, fig.align= 'center'}
 
@@ -166,7 +166,9 @@ top25_boysplot <- top25_plot(df = Baby_Names, xaxis_size = 10, xaxis_rows = 2, g
 cowplot::plot_grid(top25_boysplot, top25_girlsplot, nrow = 1)
 ```
 \newpage
-# Plot 2: Increase in name popularity year-on-year, per decade: Girls
+
+# Plot 2: Increase in name popularity year-on-year, per decade for Girls
+
 These plots show how year-on-year popularity of names are distributed. The 3 names that had the highest uptake per decade is shown in red. This can be compared to releases of music. movies where the name is used. 
 In early days, parents really did not look further than the first page of the "Baby Name Book". 
 ```{r}
@@ -174,7 +176,9 @@ q <- top25_increaseplot(Baby_Names)
 q
 ```
 \newpage
-# Plot 3: Increase in name popularity year-on-year, per decade: Boys
+
+# Plot 3: Increase in name popularity year-on-year, per decade for boys
+
 These plots show how year-on-year popularity of names are distributed. The 3 names that had the highest uptake per decade is shown in red. This can be compared to releases of music. movies where the name is used. 
 Parents still looked at A-names, and keep on naming their boys names from the Bible. What is not seen here is the persistence of the name "James" Since it remains popular year-on-year, the increase may be less pertinent. 
 ```{r}
@@ -196,7 +200,9 @@ spearman_full(Baby_Names)
 We can observe the Spearman rank correlations, portraying naming persistence of the Top 25girls and boys names in Figure \@ref(fig:spearman). In the early years, naming persistence was very high, with a correlation close to 1. Naming persistence decreased severely in the 1960s and stayed lower. For girls, it also decreased, but not as dramatically. Between the 1970s and 1990s, naming patterns in the United States began to shift noticeably, particularly for girls. The rise of television, pop music, and mass media exposed parents to a wider range of influences. Parents were now getting inspiration from soap opera characters to chart-topping musicians — which led to short-lived spikes in name popularity [@abramson2003TVhistory]. Names like Katina (influenced by the 1974 soap "Where the Heart Is") illustrate how easily cultural moments could shape naming choices. This era marked a move away from traditional, family-based naming toward more trend-driven and individualistic preferences, contributing to a clear decline in naming persistence as measured by year-over-year Spearman correlations. This leads us to looking into the correlation between the Top-100 Billoard artist names and HBO character and actor names, with popular baby names in the US. 
 
 \newpage
+
 # Comparison with Musicians, Song Titles and Prominent Figures
+
 Popular names such as Dorothy and Elizabeth are likely to be based on political figures, Queen Elizabeth and Dorothy is strongly associated with the character Dorothy Gale from "The Wizard of Oz," further solidifying its place in popular culture. The 1939 film adaptation starring Judy Garland cemented the name's popularity. Barbara Stanwyck was establishing herself as a prominent film actress, appearing in popular movies like "Stella Dallas".
 
 The most popular boys' names remain those of the 12 disciples in the Bible. 
